@@ -18,7 +18,7 @@ public class QuizClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private int port = 1404;
+    private int port = 1404; // Port mit iranischen Kalenderjahr initalisieren
 
     private List<QuizQuestion> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
@@ -66,7 +66,7 @@ public class QuizClient {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(w1, "Could not connect to server.");
+            JOptionPane.showMessageDialog(w1, "Verbindung zum Server konnte nicht hergestellt werden");
             //System.exit(1);  // Nach Bestätigung. Alle Fenster automatisch geschlossen.
         }
     }
@@ -74,7 +74,7 @@ public class QuizClient {
     private void loadQuestions() {
         try {
             // Fragen vom Server laden
-            out.println("LOAD_QUESTIONS");
+            out.println("Fragen Laden / Load Questions");
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.equals("END")) break; // Ende der Fragen

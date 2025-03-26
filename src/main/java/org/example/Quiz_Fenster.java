@@ -111,11 +111,11 @@ public class Quiz_Fenster {
     }
 }
 
-class QuizQuestion {
+class Quiz_Question {
     private String question;
     private String[] options;
 
-    public QuizQuestion(String question, String[] options) {
+    public Quiz_Question(String question, String[] options) {
         this.question = question;
         this.options = options;
     }
