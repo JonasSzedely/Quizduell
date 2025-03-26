@@ -1,4 +1,4 @@
-package Andere_Methode;
+package org.example;
 
 import javax.swing.*;
 import java.awt.*;
