@@ -9,7 +9,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Quiz_Fenster {
+/*public class QuizFenster {
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     private JLabel frage;
     private JButton[] ant = new JButton[4];
@@ -18,7 +18,7 @@ public class Quiz_Fenster {
     private PrintWriter out;
     private BufferedReader in;
 
-    private List<QuizQuestion> questions = new ArrayList<>();
+    private List<Quiz_Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
 
     public static void main(String[] args) {
@@ -83,7 +83,7 @@ public class Quiz_Fenster {
                     line = in.readLine();
                     options[i] = line;
                 }
-                questions.add(new QuizQuestion(questionText, options));
+                questions.add(new Quiz_Question(questionText, options));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,3 +129,4 @@ class Quiz_Question {
     }
 }
 
+*/
