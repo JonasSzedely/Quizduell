@@ -9,13 +9,13 @@ import java.net.*;
 public class QuizClient {
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     private JLabel frage;
-    private JButton[] ant = new JButton[3]; // A, B, C
-    private JButton startButton; // Start-Button
+    private JButton[] ant = new JButton[3]; // A, B, C Antwort Button
+    private JButton startButton;
     private JFrame w1;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private int port = 1404; // Port initialisieren
+    private int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netwerkdiensten.
     private boolean quizStarted = false;
 
     public static void main(String[] args) {
@@ -24,10 +24,10 @@ public class QuizClient {
 
     public QuizClient() {
         w1 = new JFrame("QuizDuell, Wer ist der Beste!!!");
-        w1.setSize(800, 600); // Größe des Fensters erhöhen
+        w1.setSize(800, 600);
         w1.setLocation((int) (dim.getWidth() / 2 - 400), (int) (dim.getHeight() / 2 - 300));
         w1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        w1.setLayout(new BorderLayout()); // Verwende BorderLayout
+        w1.setLayout(new BorderLayout());
 
         // Frage-Label initialisieren
         frage = new JLabel("Hier steht die Frage", SwingConstants.CENTER);
@@ -41,7 +41,7 @@ public class QuizClient {
         // Buttons initialisieren und zum Panel hinzufügen
         for (int i = 0; i < 3; i++) { // Nur 3 Antworten (A, B, C)
             ant[i] = new JButton("Antwort: " + (char) ('A' + i)); // Setze Button-Text auf "Antwort: A", "Antwort: B", "Antwort: C"
-            final int index = i; // für die ActionListener
+            final int index = i;
             ant[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -53,8 +53,8 @@ public class QuizClient {
                     }
                 }
             });
-            ant[i].setEnabled(false); // Zuerst deaktivieren
-            buttonPanel.add(ant[i]); // Füge Button zum Panel hinzu
+            ant[i].setEnabled(false);
+            buttonPanel.add(ant[i]);
         }
 
         // Start-Button initialisieren
@@ -65,9 +65,9 @@ public class QuizClient {
                 startQuiz();
             }
         });
-        buttonPanel.add(startButton); // Füge Start-Button zum Panel hinzu
+        buttonPanel.add(startButton);
 
-        w1.add(buttonPanel, BorderLayout.CENTER); // Füge das Button-Panel zum JFrame hinzu
+        w1.add(buttonPanel, BorderLayout.CENTER);
 
         w1.setVisible(true);
         connectToServer();
@@ -75,7 +75,7 @@ public class QuizClient {
 
     private void connectToServer() {
         try {
-            socket = new Socket("localhost", port); // Server-Adresse und Port
+            socket = new Socket("localhost", port);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -86,11 +86,11 @@ public class QuizClient {
 
     private void startQuiz() {
         quizStarted = true;
-        startButton.setEnabled(false); // Deaktiviere den Start-Button
+        startButton.setEnabled(false);
         for (JButton button : ant) {
-            button.setEnabled(true); // Aktiviere die Antwort-Buttons
+            button.setEnabled(true);
         }
-        displayQuestions(); // Beginne die Anzeige der Fragen
+        displayQuestions();
     }
 
     private void displayQuestions() {
@@ -100,32 +100,31 @@ public class QuizClient {
                 while (quizStarted && (line = in.readLine()) != null) {
                     // Setze die Frage
                     frage.setText(line); // Setze die Frage
-                    System.out.println("Frage empfangen: " + line); // Debugging-Ausgabe
+                    System.out.println("Frage empfangen: " + line);
 
-                    String[] antworten = new String[3]; // Array für die Antworten
+                    String[] antworten = new String[3];
 
-                    for (int i = 0; i < 3; i++) { // Lese die Antworten
-                        line = in.readLine(); // Lese die Antworten
+                    for (int i = 0; i < 3; i++) {
+                        line = in.readLine();
                         if (line == null) {
                             JOptionPane.showMessageDialog(w1, "Fehler beim Empfangen der Antworten. Bitte überprüfen Sie den Server.");
                             return;
                         }
                         antworten[i] = line; // Speichere die Antwort in der Variablen
-                        System.out.println("Antwort empfangen: " + antworten[i]); // Debugging-Ausgabe
+                        System.out.println("Antwort empfangen: " + antworten[i]);
                         ant[i].setText("Antwort: " + antworten[i]);
                     }
 
                     // Lese die richtige Antwort (vierte Zeile)
-                    String richtigeAntwort = in.readLine(); // Lese die richtige Antwort
-                    System.out.println("Richtige Antwort empfangen: " + richtigeAntwort); // Debugging-Ausgabe
+                    String richtigeAntwort = in.readLine();
+                    System.out.println("Richtige Antwort empfangen: " + richtigeAntwort);
 
                     // Warte auf die Rückmeldung des Servers (Richtig/Falsch)
-                    String responseMessage = in.readLine(); // Lese die Antwort vom Server (Richtig/Falsch)
+                    String responseMessage = in.readLine();
 
                     // Zeige die Rückmeldung an und warte auf die Benutzeraktion
-                    JOptionPane.showMessageDialog(w1, responseMessage); // Zeige die Rückmeldung an
+                    JOptionPane.showMessageDialog(w1, responseMessage);
 
-                    // Aktiviere die Buttons nach der Rückmeldung
                     for (JButton button : ant) {
                         button.setEnabled(true);
                     }
@@ -141,10 +140,8 @@ public class QuizClient {
 
 
     private void processResponse(String responseMessage) {
-        // Zeige die Rückmeldung an
-        JOptionPane.showMessageDialog(w1, responseMessage); // Zeige die Rückmeldung an
+        JOptionPane.showMessageDialog(w1, responseMessage);
 
-        // Aktiviere die Buttons nach der Rückmeldung
         for (JButton button : ant) {
             button.setEnabled(true);
         }
@@ -155,9 +152,9 @@ public class QuizClient {
         // Warte auf die Bestätigung des Servers, dass die Antwort empfangen wurde
         new Thread(() -> {
             try {
-                String responseMessage = in.readLine(); // Lese die Rückmeldung vom Server
-                JOptionPane.showMessageDialog(w1, responseMessage); // Zeige die Rückmeldung an
-                // Aktiviere die Buttons nach Erhalt der Rückmeldung
+                String responseMessage = in.readLine();
+                JOptionPane.showMessageDialog(w1, responseMessage);
+
                 for (JButton button : ant) {
                     button.setEnabled(true);
                 }

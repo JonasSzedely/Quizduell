@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutorService;
 public class ServerEsmailVorschlag {
     public static List<String[]> fragenListe = new ArrayList<>();
     private static List<ClientHandler> clients = new ArrayList<>();
-    private static int port = 1404; // Iranische KalenderJahr als Portschlüssel gemerkt. :-)  ---> nicht vorreserviert in bekannte Netwerkdiensten.
-    private static int poolsize = 10;
+    private static int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netwerkdiensten.
+    private static int poolsize = 10; // maximale Spieler wird hier auf 10 gesetzt!
 
     public static void main(String[] args) {
         String dateiPfad = "src/Ordner_Fragen/fragen.txt";
@@ -47,7 +47,7 @@ public class ServerEsmailVorschlag {
             String[] aktuelleFrage = new String[5]; // Immer Größe 5 verwenden
 
             while ((zeile = bufferedReader.readLine()) != null) {
-                zeile = zeile.trim(); // Zeile trimmen
+                zeile = zeile.trim();
 
                 if (zeile.isEmpty()) {
                     continue; // Leere Zeilen überspringen
@@ -107,8 +107,7 @@ public class ServerEsmailVorschlag {
         public ClientHandler(Socket socket) {
             this.socket = socket;
             try {
-                // Setzen von Timeouts
-                socket.setSoTimeout(20000); // 10 Sekunden Timeout für Leseoperationen
+                socket.setSoTimeout(20000); // 20 Sekunden Timeout für Leseoperationen
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
@@ -117,20 +116,20 @@ public class ServerEsmailVorschlag {
             }
         }
 
-        private int punkte = 0; // Punkte für den Client
+        private int punkte = 0;
 
         @Override
         public void run() {
             try {
-                boolean ersteFrage = true; // Flag für die erste Frage
+                boolean ersteFrage = true;
                 for (String[] frage : fragenListe) {
                     out.println(frage[0]); // Frage
                     out.println("A: " + frage[1]);
                     out.println("B: " + frage[2]);
                     out.println("C: " + frage[3]);
                     if (ersteFrage) {
-                        out.println("Bitte geben Sie Ihre Antwort (A, B, C) ein:"); // Nur bei der ersten Frage senden
-                        ersteFrage = false; // Flag auf false setzen
+                        out.println("Bitte geben Sie Ihre Antwort (A, B, C) ein:");
+                        ersteFrage = false;
                     }
 
                     // Debugging-Ausgabe
@@ -138,6 +137,7 @@ public class ServerEsmailVorschlag {
                     System.out.println("Antworten gesendet: A: " + frage[1] + ", B: " + frage[2] + ", C: " + frage[3]);
 
                     String antwort = in.readLine(); // Antwort vom Client lesen
+                    System.out.println("Antwort ist gespeichert in variabel antwort und heisst: " + antwort);
                     if (antwort != null) {
                         // Validierung der Antwort
                         System.out.println("Antwort empfangen: " + antwort); // Debugging-Ausgabe
