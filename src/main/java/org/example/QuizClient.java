@@ -15,7 +15,7 @@ public class QuizClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netwerkdiensten.
+    private int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netzwerkdiensten.
     private boolean quizStarted = false;
 
     public static void main(String[] args) {
