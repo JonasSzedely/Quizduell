@@ -10,7 +10,7 @@ import java.util.*;
 public class ServerEsmailVorschlag {
     public static List<String[]> fragenListe = new ArrayList<>();
     private static List<ClientHandler> clients = new ArrayList<>();
-    private static final Map <String, Integer> punkteMap = new ConcurrentHashMap<>();
+    private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>();
     private static Set<String> beantwortet = ConcurrentHashMap.newKeySet();
     private static int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netwerkdiensten.
     private static int poolsize = 2; // maximale Spieler die spielen dürfen, wird hier gesetzt!
@@ -28,12 +28,11 @@ public class ServerEsmailVorschlag {
                 try {
                     Socket clientSocket = serverSocket.accept();
                     String clientName = "Spieler " + (clients.size() + 1);
-                    ClientHandler clientHandler = new ClientHandler(clientSocket,clientName);
+                    ClientHandler clientHandler = new ClientHandler(clientSocket, clientName);
                     clients.add(clientHandler);
                     pool.execute(clientHandler);
                     System.out.println("Der Erste Spieler ist: " + clients.get(0).getClientName());
                     System.out.println("Der Zweite Spieler ist: " + (clients.size() > 1 ? clients.get(1).getClientName() : "Noch kein zweiter Spieler"));
-                    System.out.println("Der Zweite Spieler ist: " + (clients.size() > 2 ? clients.get(2).getClientName() : "Noch kein dritter Spieler "));
                 } catch (IOException e) {
                     System.err.println("Fehler beim Akzeptieren einer Verbindung: " + e.getMessage());
                 }
@@ -139,7 +138,14 @@ public class ServerEsmailVorschlag {
         @Override
         public void run() {
             try {
+                // Schleife über alle Fragen
                 for (String[] frage : fragenListe) {
+                    // Überprüfen, ob die Frage bereits beantwortet wurde
+                    if (beantwortet.contains(frage[0])) {
+                        continue; // Frage überspringen, wenn sie bereits beantwortet wurde
+                    }
+
+                    // Frage und Antworten an den Client senden
                     out.println(frage[0]); // Frage Nummer
                     out.println(frage[1]); // Die Frage
                     out.println("A: " + frage[2]);
@@ -151,25 +157,26 @@ public class ServerEsmailVorschlag {
                     System.out.println("Frage gesendet: " + frage[1]);
                     System.out.println("Antworten gesendet: A: " + frage[2] + ", B: " + frage[3] + ", C: " + frage[4]);
 
-                    String antwort = in.readLine(); // Antwort vom Client lesen
+                    // Antwort vom Client lesen
+                    String antwort = in.readLine();
                     System.out.println("Antwort ist gespeichert in der Variablen antwort und heißt: " + antwort);
+
                     if (antwort != null) {
                         // Validierung der Antwort
                         System.out.println("Antwort empfangen: " + antwort); // Debugging-Ausgabe
                         synchronized (punkteMap) {
-                            if (antwort.equalsIgnoreCase(frage[4]) && !beantwortet.contains(frage[0]) && !beantwortet.contains(frage[1])) {
+                            if (antwort.equalsIgnoreCase(frage[5])) {
                                 punkteMap.put(clientName, punkteMap.getOrDefault(clientName, 0) + 1); // Punkte erhöhen
                                 out.println("Richtig! Aktuelle Punkte: " + punkteMap.get(clientName));
                                 beantwortet.add(frage[0]); // Markiere die Frage als beantwortet
-                                beantwortet.add(frage[1]); // die Frage ist bereit beantwortet
-                            } else if (beantwortet.contains(frage[0]) && beantwortet.contains(frage[1])) {
-                                out.println("Diese Frage wurde bereits beantwortet.");
                             } else {
-                                out.println("Falsch! Die richtige Antwort ist: " + frage[4] + ". Aktuelle Punkte: " + punkteMap.getOrDefault(clientName, 0));
+                                out.println("Falsch! Die richtige Antwort ist: " + frage[5] + ". Aktuelle Punkte: " + punkteMap.getOrDefault(clientName, 0));
                             }
                         }
                     }
                 }
+
+                // Wenn alle Fragen beantwortet wurden, informiere den Client
                 out.println("Das Spiel ist beendet! Ihre Gesamtpunkte: " + punkteMap.getOrDefault(clientName, 0)); // Ergebnisse am Ende anzeigen
             } catch (IOException e) {
                 System.err.println("Fehler bei der Kommunikation mit dem Client: " + e.getMessage());
@@ -177,6 +184,7 @@ public class ServerEsmailVorschlag {
                 closeSocket();
             }
         }
+
         private void closeSocket() {
             try {
                 if (socket != null && !socket.isClosed()) {

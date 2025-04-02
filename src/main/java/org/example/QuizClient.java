@@ -8,35 +8,40 @@ import java.net.*;
 
 public class QuizClient {
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    private JLabel frage;
+    private JLabel fragenNummer, frage;
     private JButton[] ant = new JButton[3]; // A, B, C Antwort Button
     private JButton startButton;
     private JFrame w1;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netzwerkdiensten.
+    private final int port = 1404; // Port für die Verbindung
     private boolean quizStarted = false;
 
     public static void main(String[] args) {
-        new QuizClient();
+        SwingUtilities.invokeLater(QuizClient::new); // GUI im Event Dispatch Thread starten
     }
 
     public QuizClient() {
         w1 = new JFrame("QuizDuell, Wer ist der Beste!!!");
-        w1.setSize(800, 600);
+        w1.setSize(1200, 600);
         w1.setLocation((int) (dim.getWidth() / 2 - 400), (int) (dim.getHeight() / 2 - 300));
         w1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        w1.setLayout(new BorderLayout());
+        w1.setLayout(new GridLayout(3, 1));
+
+        // Frage-Label für Fragen Nummer initialisieren
+        fragenNummer = new JLabel("Hier steht die FragenNr.", SwingConstants.CENTER);
+        fragenNummer.setFont(new Font("Arial", Font.BOLD, 24)); // Schriftgröße erhöhen
+        w1.add(fragenNummer); // Frage oben platzieren
 
         // Frage-Label initialisieren
-        frage = new JLabel("Hier steht die Frage", SwingConstants.CENTER);
-        frage.setFont(new Font("Arial", Font.BOLD, 24)); // Schriftgröße erhöhen
-        w1.add(frage, BorderLayout.NORTH); // Frage oben platzieren
+        frage = new JLabel("Hier steht die Frage selbst", SwingConstants.CENTER);
+        frage.setFont(new Font("Arial", Font.BOLD, 18)); // Schriftgröße erhöhen
+        w1.add(frage); // Frage in der Mitte platzieren
 
         // Panel für die Antwort-Buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 1)); // 4 Zeilen, 1 Spalte
+        buttonPanel.setLayout(new GridLayout(4, 1));
 
         // Buttons initialisieren und zum Panel hinzufügen
         for (int i = 0; i < 3; i++) { // Nur 3 Antworten (A, B, C)
@@ -46,7 +51,7 @@ public class QuizClient {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String answer = String.valueOf((char) ('A' + index)); // Die gewählte Antwort
-                    sendAnswer(answer); // Sende die gewählte Antwort an den Server
+                    sendAnswer(answer.trim()); // Sende die gewählte Antwort an den Server
                     // Deaktiviere die Buttons, während auf die Antwort gewartet wird
                     for (JButton button : ant) {
                         button.setEnabled(false);
@@ -65,10 +70,9 @@ public class QuizClient {
                 startQuiz();
             }
         });
-        buttonPanel.add(startButton);
+        buttonPanel.add(startButton, SwingConstants.BOTTOM);
 
-        w1.add(buttonPanel, BorderLayout.CENTER);
-
+        w1.add(buttonPanel); // Button-Panel unten platzieren
         w1.setVisible(true);
         connectToServer();
     }
@@ -97,70 +101,54 @@ public class QuizClient {
         new Thread(() -> { // Erstelle einen neuen Thread für die Fragenanzeige
             try {
                 String line;
-                while (quizStarted && (line = in.readLine()) != null) {
-                    // Setze die Frage
-                    frage.setText(line); // Setze die Frage
-                    System.out.println("Frage empfangen: " + line);
+                while (quizStarted) {
+                    String frageNr = in.readLine(); // FrageNr empfangen
+                    if (frageNr == null) {
+                        break; // Beende die Schleife, wenn keine Fragen mehr vorhanden sind
+                    }
+                    SwingUtilities.invokeLater(() -> fragenNummer.setText(frageNr)); // FrageNr aktualisieren
 
-                    String[] antworten = new String[3];
+                    String frageText = in.readLine(); // Frage selbst empfangen
+                    if (frageText == null) {
+                        JOptionPane.showMessageDialog(w1, "Fehler beim Empfangen der Frage. Bitte überprüfen Sie den Server.");
+                        return;
+                    }
+                    SwingUtilities.invokeLater(() -> frage.setText(frageText)); // Frage aktualisieren
 
+                    // Antworten empfangen
                     for (int i = 0; i < 3; i++) {
                         line = in.readLine();
                         if (line == null) {
                             JOptionPane.showMessageDialog(w1, "Fehler beim Empfangen der Antworten. Bitte überprüfen Sie den Server.");
                             return;
                         }
-                        antworten[i] = line; // Speichere die Antwort in der Variablen
-                        System.out.println("Antwort empfangen: " + antworten[i]);
-                        ant[i].setText("Antwort: " + antworten[i]);
+                        final String antwortText = line.split(": ")[1]; // Extrahiere die Antwort nach dem ": "
+                        final int finalI = i;
+                        SwingUtilities.invokeLater(() -> ant[finalI].setText("Antwort: " + antwortText)); // Antwort-Buttons aktualisieren
                     }
-
-                    // Lese die richtige Antwort (vierte Zeile)
-                    String richtigeAntwort = in.readLine();
-                    System.out.println("Richtige Antwort empfangen: " + richtigeAntwort);
 
                     // Warte auf die Rückmeldung des Servers (Richtig/Falsch)
                     String responseMessage = in.readLine();
-
-                    // Zeige die Rückmeldung an und warte auf die Benutzeraktion
-                    JOptionPane.showMessageDialog(w1, responseMessage);
-
-                    for (JButton button : ant) {
-                        button.setEnabled(true);
+                    if (responseMessage != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            JOptionPane.showMessageDialog(w1, responseMessage);
+                            // Frage-Buttons wieder aktivieren, um die nächste Frage zu ermöglichen
+                            for (JButton button : ant) {
+                                button.setEnabled(true);
+                            }
+                        });
                     }
                 }
 
                 // Wenn keine Fragen mehr vorhanden sind
-                JOptionPane.showMessageDialog(w1, "Bitte warten, Ihre Ergebnisse werden ausgewertet..."); // Nachricht anzeigen
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(w1, "Das Spiel ist beendet! Ihre Ergebnisse werden ausgewertet...")); // Nachricht anzeigen
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-
-    private void processResponse(String responseMessage) {
-        JOptionPane.showMessageDialog(w1, responseMessage);
-
-        for (JButton button : ant) {
-            button.setEnabled(true);
-        }
     }
 
     private void sendAnswer(String answer) {
         out.println(answer); // Sende die Antwort an den Server
-        // Warte auf die Bestätigung des Servers, dass die Antwort empfangen wurde
-        new Thread(() -> {
-            try {
-                String responseMessage = in.readLine();
-                JOptionPane.showMessageDialog(w1, responseMessage);
-
-                for (JButton button : ant) {
-                    button.setEnabled(true);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 }
