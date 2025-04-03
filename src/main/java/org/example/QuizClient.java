@@ -15,7 +15,7 @@ public class QuizClient {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private final int port = 1404; // Port für die Verbindung
+    private final int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netzwerkdiensten.
     private boolean quizStarted = false;
 
     public static void main(String[] args) {
@@ -142,6 +142,9 @@ public class QuizClient {
 
                 // Wenn keine Fragen mehr vorhanden sind
                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(w1, "Das Spiel ist beendet! Ihre Ergebnisse werden ausgewertet...")); // Nachricht anzeigen
+                for (JButton button : ant) {
+                    button.setEnabled(true);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
