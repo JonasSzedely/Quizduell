@@ -1,4 +1,4 @@
-package org.example;
+package org.Codes;
 
 import java.io.*;
 import java.net.*;
@@ -10,10 +10,10 @@ import java.util.*;
 public class ServerEsmailVorschlag {
     private static final List<String[]> fragenListe = new ArrayList<>();
     private static final List<ClientHandler> clients = new ArrayList<>();
-    private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>(); // spezielle HashMap für die Punkte zuweisung.
+    private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>();
     private static final Set<String> beantwortet = ConcurrentHashMap.newKeySet();
-    private static final int port = 1404; // Port für den Server
-    private static final int poolSize = 2; // Maximale Anzahl an Spielern
+    private static final int port = 1404;
+    private static final int poolSize = 2;
 
     public static void main(String[] args) {
         String dateiPfad = "src/Ordner_Fragen/fragen.txt";
@@ -22,7 +22,7 @@ public class ServerEsmailVorschlag {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server läuft auf Port " + port);
             System.out.println("Warten auf Spieler ... ");
-            ExecutorService pool = Executors.newFixedThreadPool(poolSize); // interface die Runnable asynchron ausführen kann.
+            ExecutorService pool = Executors.newFixedThreadPool(poolSize);
 
             while (true) {
                 try {
@@ -71,7 +71,7 @@ public class ServerEsmailVorschlag {
 
                 if (aktuelleFrage[0] != null && aktuelleFrage[5] != null) {
                     fragenListe.add(aktuelleFrage);
-                    aktuelleFrage = new String[6]; // Neue Frage initialisieren
+                    aktuelleFrage = new String[6];
                 }
             }
 
@@ -139,39 +139,9 @@ public class ServerEsmailVorschlag {
                     processAntwortDesClients(antwort, frage);
                 }
 
-                // Am Ende des Spiels Punktzahlen ermitteln
                 int eigenePunkte = punkteMap.getOrDefault(clientName, 0);
                 out.println("Das Spiel ist beendet! Ihre Gesamtpunkte beträgt: " + eigenePunkte);
-
-                // Vergleiche die Punktzahlen und bestimme den Sieger
-                StringBuilder ergebnis = new StringBuilder();
-                String sieger = null;
-                int maxPunkte = -1;
-
-                for (Map.Entry<String, Integer> entry : punkteMap.entrySet()) {
-                    String spielerName = entry.getKey();
-                    int punkte = entry.getValue();
-                    ergebnis.append(spielerName).append(": ").append(punkte).append("\n");
-
-                    if (punkte > maxPunkte) {
-                        maxPunkte = punkte;
-                        sieger = spielerName;
-                    }
-                }
-
-                // Gebe die Ergebnisse aus
-                for (Map.Entry<String, Integer> entry : punkteMap.entrySet()) {
-                    String spielerName = entry.getKey();
-                    if (spielerName.equals(sieger)) {
-                        out.println("Sie haben gewonnen! Ihre Punktzahl: " + eigenePunkte);
-                    } else {
-                        out.println("Sie haben verloren: " + spielerName + " mit " + entry.getValue() + " Punkten.");
-                    }
-                }
-
-                // Zeige die Gesamtpunkte aller Spieler
-                out.println("Gesamtpunkte aller Spieler:\n" + ergebnis.toString());
-
+                zeigeErgebnisse();
             } catch (IOException e) {
                 System.err.println("Fehler bei der Kommunikation mit dem Client: " + e.getMessage());
             } finally {
@@ -198,26 +168,36 @@ public class ServerEsmailVorschlag {
                     } else {
                         out.println("Falsch! Die richtige Antwort ist: " + frage[5] + ". Aktuelle Punkte: " + punkteMap.getOrDefault(clientName, 0));
                     }
-
-                    informiereTopClient();
                 }
             }
         }
 
-        private void informiereTopClient() {
-            String topClient = null;
+        private void zeigeErgebnisse() {
+            StringBuilder ergebnis = new StringBuilder();
+            String sieger = null;
             int maxPunkte = -1;
 
             for (Map.Entry<String, Integer> entry : punkteMap.entrySet()) {
-                if (entry.getValue() > maxPunkte) {
-                    maxPunkte = entry.getValue();
-                    topClient = entry.getKey();
+                String spielerName = entry.getKey();
+                int punkte = entry.getValue();
+                ergebnis.append(spielerName).append(": ").append(punkte).append("\n");
+
+                if (punkte > maxPunkte) {
+                    maxPunkte = punkte;
+                    sieger = spielerName;
                 }
             }
 
-            if (topClient != null) {
-                out.println("Client mit der höchsten Punktzahl: " + topClient + " mit " + maxPunkte + " Punkten.");
+            for (Map.Entry<String, Integer> entry : punkteMap.entrySet()) {
+                String spielerName = entry.getKey();
+                if (spielerName.equals(sieger)) {
+                    out.println("Sie haben gewonnen! Ihre Punktzahl: " + punkteMap.get(spielerName));
+                } else {
+                    out.println("Sie haben verloren: " + spielerName + " mit " + entry.getValue() + " Punkten.");
+                }
             }
+
+            out.println("Gesamtpunkte aller Spieler:\n" + ergebnis.toString());
         }
 
         private void closeSocket() {

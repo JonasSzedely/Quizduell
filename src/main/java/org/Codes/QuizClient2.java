@@ -1,4 +1,4 @@
-package org.example;
+package org.Codes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +15,11 @@ public class QuizClient2 {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private final int port = 1404; // Port für die Verbindung
+    private final int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netzwerkdiensten.
     private boolean quizStarted = false;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(QuizClient2::new); // GUI im Event Dispatch Thread starten
+        SwingUtilities.invokeLater(QuizClient::new); // GUI im Event Dispatch Thread starten
     }
 
     public QuizClient2() {
@@ -85,7 +85,6 @@ public class QuizClient2 {
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(w1, "Verbindung zum Server konnte nicht hergestellt werden. Bitte sicherstellen, dass der Server läuft und der Port korrekt ist.");
-            System.exit(1); // Programm beenden, wenn die Verbindung nicht hergestellt werden kann
         }
     }
 
@@ -142,10 +141,10 @@ public class QuizClient2 {
                 }
 
                 // Wenn keine Fragen mehr vorhanden sind
-                SwingUtilities.invokeLater(() -> {
-                    JOptionPane.showMessageDialog(w1, "Das Spiel ist beendet! Ihre Ergebnisse werden ausgewertet..."); // Nachricht anzeigen
-                    startButton.setEnabled(true); // Startbutton wieder aktivieren
-                });
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(w1, "Das Spiel ist beendet! Ihre Ergebnisse werden ausgewertet...")); // Nachricht anzeigen
+                for (JButton button : ant) {
+                    button.setEnabled(true);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

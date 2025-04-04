@@ -1,4 +1,4 @@
-package org.example;
+/*package org.example;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,4 +61,4 @@ public class QuestionLoader {
             System.out.println("Richtig: " + frage[4]);
         }
     }
-}
+}*/

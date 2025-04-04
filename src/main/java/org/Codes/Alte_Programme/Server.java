@@ -1,4 +1,4 @@
-package org.example;
+/*package org.example;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -175,4 +175,4 @@ public class Server {
             }
         }
     }
-}
+}*/

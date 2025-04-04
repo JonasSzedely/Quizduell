@@ -1,25 +1,15 @@
-package Andere_Methode;
+package org.Codes.Alte_Programme;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class Quiz_Fenster {
+/*public class QuizFenster {
     private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
     private JLabel frage;
-    private JButton[] ant = new JButton[3]; // A, B, C
+    private JButton[] ant = new JButton[4];
     private JFrame w1;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
 
-    private List<QuizQuestion> questions = new ArrayList<>();
+    private List<Quiz_Question> questions = new ArrayList<>();
     private int currentQuestionIndex = 0;
 
     public static void main(String[] args) {
@@ -38,8 +28,9 @@ public class Quiz_Fenster {
         frage.setBounds(52, 30, 300, 40);
         w1.add(frage);
 
+
         // Buttons initialisieren und zum JFrame hinzufügen
-        for (int i = 0; i < 3; i++) { // Nur 3 Antworten (A, B, C)
+        for (int i = 0; i < 4; i++) {
             ant[i] = new JButton("Antwort " + (char) ('A' + i));
             ant[i].setBounds(52 + (i % 2) * 168, 90 + (i / 2) * 70, 120, 40);
             final int index = i; // für die ActionListener
@@ -78,14 +69,13 @@ public class Quiz_Fenster {
             while ((line = in.readLine()) != null) {
                 if (line.equals("END")) break; // Ende der Fragen
                 String questionText = line;
-                String[] options = new String[3]; // A, B, C
-                for (int i = 0; i < 3; i++) {
+                String[] options = new String[4];
+                for (int i = 0; i < 4; i++) {
                     line = in.readLine();
                     options[i] = line;
                 }
-                questions.add(new QuizQuestion(questionText, options));
+                questions.add(new Quiz_Question(questionText, options));
             }
-            Collections.shuffle(questions); // Fragen zufällig mischen
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,11 +102,11 @@ public class Quiz_Fenster {
     }
 }
 
-class QuizQuestion {
+class Quiz_Question {
     private String question;
     private String[] options;
 
-    public QuizQuestion(String question, String[] options) {
+    public Quiz_Question(String question, String[] options) {
         this.question = question;
         this.options = options;
     }
@@ -130,3 +120,4 @@ class QuizQuestion {
     }
 }
 
+*/
