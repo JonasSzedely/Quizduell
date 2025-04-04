@@ -46,7 +46,7 @@ public class Server {
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(dateiPfad))) {
             String zeile;
-            String[] aktuelleFrage = new String[5]; // Immer Größe 5 verwenden
+            String[] aktuelleFrage = new String[6]; // Immer Grösse 6 verwenden
 
             while ((zeile = bufferedReader.readLine()) != null) {
                 zeile = zeile.trim();
@@ -57,48 +57,55 @@ public class Server {
 
                 if (zeile.startsWith("#")) {
                     // Neue Frage beginnt - vorherige speichern falls vorhanden
-                    if (aktuelleFrage[0] != null && aktuelleFrage[4] != null) {
+                    if (aktuelleFrage[0] != null && aktuelleFrage[5] != null) {
                         fragenListe.add(aktuelleFrage);
                     }
-                    aktuelleFrage = new String[5]; // Neue Frage initialisieren
+                    aktuelleFrage = new String[6]; // Neue Frage initialisieren
                 } else {
                     // Hier wird jetzt sichergestellt, dass die Zeile nicht leer ist
                     switch (zeile.charAt(0)) {
-                        case 'A':
+                        case '#':
                             if (zeile.length() > 2) {
-                                aktuelleFrage[1] = zeile.substring(2).trim();
+                                aktuelleFrage[0] = zeile.substring(8).trim();
                             }
                             break;
-                        case 'B':
+                        case 'A':
                             if (zeile.length() > 2) {
                                 aktuelleFrage[2] = zeile.substring(2).trim();
                             }
                             break;
-                        case 'C':
+                        case 'B':
                             if (zeile.length() > 2) {
                                 aktuelleFrage[3] = zeile.substring(2).trim();
                             }
                             break;
+                        case 'C':
+                            if (zeile.length() > 2) {
+                                aktuelleFrage[4] = zeile.substring(2).trim();
+                            }
+                            break;
                         case 'r':
                             if (zeile.startsWith("richtig: ")) {
-                                aktuelleFrage[4] = zeile.substring(9).trim();
+                                aktuelleFrage[5] = zeile.substring(9).trim();
                             }
                             break;
                         default:
-                            aktuelleFrage[0] = zeile; // Fragentext (nur wenn nicht leer)
+                            aktuelleFrage[1] = zeile; // Fragentext (nur wenn nicht leer)
                             break;
                     }
                 }
             }
             // Letzte Frage hinzufügen
-            if (aktuelleFrage[0] != null && aktuelleFrage[4] != null) {
+            if (aktuelleFrage[0] != null && aktuelleFrage[5] != null) {
                 fragenListe.add(aktuelleFrage);
             }
+
         } catch (IOException e) {
             System.err.println("Fehler beim Laden der Fragen: " + e.getMessage());
         }
 
         System.out.println("\nAnzahl geladener Fragen: " + fragenListe.size());
+        System.out.println(fragenListe);
     }
 
     private static class ClientHandler implements Runnable {
@@ -125,29 +132,30 @@ public class Server {
             try {
                 boolean ersteFrage = true;
                 for (String[] frage : fragenListe) {
-                    out.println(frage[0]); // Frage
-                    out.println("A: " + frage[1]);
-                    out.println("B: " + frage[2]);
-                    out.println("C: " + frage[3]);
+                    out.println(frage[0]);
+                    out.println(frage[1]); // Frage
+                    out.println("A: " + frage[2]);
+                    out.println("B: " + frage[3]);
+                    out.println("C: " + frage[4]);
                     if (ersteFrage) {
                         out.println("Bitte geben Sie Ihre Antwort (A, B, C) ein:");
                         ersteFrage = false;
                     }
 
                     // Debugging-Ausgabe
-                    System.out.println("Frage gesendet: " + frage[0]);
-                    System.out.println("Antworten gesendet: A: " + frage[1] + ", B: " + frage[2] + ", C: " + frage[3]);
+                    System.out.println("Frage gesendet: " + frage[1]);
+                    System.out.println("Antworten gesendet: A: " + frage[2] + ", B: " + frage[3] + ", C: " + frage[4]);
 
                     String antwort = in.readLine(); // Antwort vom Client lesen
                     System.out.println("Antwort ist gespeichert in variabel antwort und heisst: " + antwort);
                     if (antwort != null) {
                         // Validierung der Antwort
                         System.out.println("Antwort empfangen: " + antwort); // Debugging-Ausgabe
-                        if (antwort.equalsIgnoreCase(frage[4])) {
+                        if (antwort.equalsIgnoreCase(frage[5])) {
                             punkte++; // Punkte erhöhen
                             out.println("Richtig! Aktuelle Punkte: " + punkte);
                         } else if (antwort.equalsIgnoreCase("A") || antwort.equalsIgnoreCase("B") || antwort.equalsIgnoreCase("C")) {
-                            out.println("Falsch! Die richtige Antwort ist: " + frage[4] + ". Aktuelle Punkte: " + punkte);
+                            out.println("Falsch! Die richtige Antwort ist: " + frage[5] + ". Aktuelle Punkte: " + punkte);
                         } else {
                             out.println("Ungültige Eingabe! Bitte geben Sie A, B oder C ein.");
                         }
