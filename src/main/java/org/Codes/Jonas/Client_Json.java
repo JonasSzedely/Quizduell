@@ -18,7 +18,7 @@ public class Client_Json {
     private int points = 0;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new org.example.Client_Json());
+        SwingUtilities.invokeLater(() -> new org.example.Client_Json_2());
     }
 
     public Client_Json() {
@@ -72,6 +72,7 @@ public class Client_Json {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             new Thread(this::listenToServer).start();
+            System.out.println("Erfolgreich mit Server verbunden");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Verbindungsfehler: " + e.getMessage());
             System.exit(1);
@@ -82,6 +83,7 @@ public class Client_Json {
         try {
             String message;
             while ((message = in.readLine()) != null) {
+                System.out.println("Nachricht vom Server: " + message);
                 processServerMessage(message);
             }
         } catch (IOException e) {
@@ -120,7 +122,37 @@ public class Client_Json {
             case "CAN_START":
                 setStartButtonEnabled(Boolean.parseBoolean(parts[1]));
                 break;
+            case "NEXT_QUESTION_COUNTDOWN":
+                showNextQuestionCountdown();
+                break;
+            case "INACTIVE":
+                setInactive(parts[1]);
+                break;
         }
+    }
+
+    private void showNextQuestionCountdown() {
+        SwingUtilities.invokeLater(() -> {
+            disableAnswerButtons();
+            resetAnswerButtons();
+
+            new Thread(() -> {
+                for (int i = 5; i > 0; i--) {
+                    final int count = i;
+                    SwingUtilities.invokeLater(() -> {
+                        statusLabel.setText("Nächste Frage in " + count + " Sekunden...");
+                    });
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText("Bereit für die nächste Frage");
+                });
+            }).start();
+        });
     }
 
     private void updateStatus(String status) {
@@ -134,6 +166,14 @@ public class Client_Json {
             } else if (status.startsWith("MAX_PLAYERS_REACHED")) {
                 statusLabel.setText(status.split("\\|")[1]);
             }
+        });
+    }
+
+    private void setInactive(String message) {
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText(message);
+            disableAnswerButtons();
+            startButton.setEnabled(false);
         });
     }
 
@@ -151,7 +191,7 @@ public class Client_Json {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
                     }
                 }
                 SwingUtilities.invokeLater(() -> {
@@ -174,7 +214,9 @@ public class Client_Json {
     }
 
     private void submitAnswer(char answer) {
-        out.println(String.valueOf(answer));
+        System.out.println("Sende Antwort: " + answer);
+        out.println(answer);
+        out.flush();
         SwingUtilities.invokeLater(() -> {
             disableAnswerButtons();
             statusLabel.setText("Antwort gesendet! Warte auf Ergebnisse...");
@@ -197,27 +239,6 @@ public class Client_Json {
             statusLabel.setText(correctAnswerGiven ?
                     "Richtige Antwort gegeben!" :
                     "Keine richtigen Antworten!");
-
-            disableAnswerButtons();
-
-            new Thread(() -> {
-                try {
-                    Thread.sleep(1000);
-                    for (int i = 5; i > 0; i--) {
-                        final int count = i;
-                        SwingUtilities.invokeLater(() -> {
-                            statusLabel.setText("Nächste Frage in " + count + "...");
-                        });
-                        Thread.sleep(1000);
-                    }
-                    SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("Bereit für die nächste Frage");
-                        resetAnswerButtons();
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
         });
     }
 
@@ -226,7 +247,7 @@ public class Client_Json {
             questionLabel.setText("<html><center>" + parts[1] + "</center></html>");
             statusLabel.setText("Spiel beendet");
             startButton.setText("Neues Spiel");
-            startButton.setEnabled(false); // Wait for server to enable it
+            startButton.setEnabled(false);
 
             disableAnswerButtons();
             resetAnswerButtons();
@@ -238,7 +259,7 @@ public class Client_Json {
             questionLabel.setText("<html><center>" + parts[1] + "</center></html>");
             statusLabel.setText("Alle Fragen beantwortet");
             startButton.setText("Neues Spiel");
-            startButton.setEnabled(false); // Wait for server to enable it
+            startButton.setEnabled(false);
 
             disableAnswerButtons();
             resetAnswerButtons();
@@ -254,6 +275,7 @@ public class Client_Json {
 
     private void startGame() {
         out.println("START");
+        out.flush();
         startButton.setEnabled(false);
     }
 

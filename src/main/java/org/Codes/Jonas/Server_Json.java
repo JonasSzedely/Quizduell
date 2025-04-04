@@ -1,11 +1,11 @@
-// server:
-package org.Codes.Jonas;
+package org.example;
 
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 import com.google.gson.*;
 
 public class Server_Json {
@@ -15,11 +15,9 @@ public class Server_Json {
     private static final int POOL_SIZE = 10;
     private static final long COUNTDOWN_DELAY = 5000;
     private static final int WINNING_POINTS = 5;
-    private static final int QUESTION_DELAY = 5000;
+    private static final int QUESTION_TIMEOUT = 30000;
     private static boolean gameInProgress = false;
     private static boolean waitingForStart = true;
-    private static int currentQuestionIndex = 0;
-    private static boolean allAnswered = false;
 
     public static void main(String[] args) {
         ladeFragen("src/Ordner_Fragen/fragen.json");
@@ -33,8 +31,7 @@ public class Server_Json {
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 clients.add(clientHandler);
                 pool.execute(clientHandler);
-                System.out.println("Neuer Spieler verbunden. Aktive Spieler: " + clients.size());
-
+                System.out.println("Neuer Spieler verbunden: " + clientSocket.getRemoteSocketAddress());
                 updateClientStatus();
             }
         } catch (IOException e) {
@@ -54,10 +51,10 @@ public class Server_Json {
             status = "READY_TO_START|Warte auf Start (" + clients.size() + "/10 Spieler)";
         }
 
-        for (ClientHandler client : clients) {
-            client.sendMessage("STATUS|" + status);
-            client.setCanStartGame(clients.size() >= 2 && clients.size() <= 10 && !gameInProgress && waitingForStart);
-        }
+        clients.forEach(c -> {
+            c.sendMessage("STATUS|" + status);
+            c.setCanStartGame(clients.size() >= 2 && clients.size() <= 10 && !gameInProgress && waitingForStart);
+        });
     }
 
     private static void ladeFragen(String dateiPfad) {
@@ -77,9 +74,9 @@ public class Server_Json {
             return;
         }
 
+        clients.forEach(c -> c.setActivePlayer(true));
         waitingForStart = false;
         gameInProgress = true;
-        currentQuestionIndex = 0;
         System.out.println("Spiel startet mit " + clients.size() + " Spielern");
         broadcastMessage("COUNTDOWN_START");
 
@@ -88,7 +85,7 @@ public class Server_Json {
                 Thread.sleep(COUNTDOWN_DELAY);
                 playGame();
             } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }).start();
     }
@@ -97,71 +94,72 @@ public class Server_Json {
         Collections.shuffle(fragenListe);
         boolean gameRunning = true;
 
-        while (currentQuestionIndex < fragenListe.size() && gameRunning) {
-            Frage frage = fragenListe.get(currentQuestionIndex);
+        for (Frage frage : fragenListe) {
+            if (!gameRunning) break;
+
+            List<ClientHandler> activePlayers = getActivePlayers();
+            if (activePlayers.isEmpty()) {
+                broadcastMessage("GAME_OVER|Keine aktiven Spieler mehr");
+                break;
+            }
+
+            System.out.println("Aktive Spieler: " + activePlayers.size());
             broadcastQuestion(frage);
-            allAnswered = false; // Reset flag for the new question
 
             List<String> answers = new ArrayList<>();
             boolean correctAnswerGiven = false;
-            ExecutorService answerPool = Executors.newFixedThreadPool(clients.size());
-            List<Future<String>> futureAnswers = new ArrayList<>();
+            long questionStartTime = System.currentTimeMillis();
 
-            for (ClientHandler client : clients) {
-                futureAnswers.add(answerPool.submit(() -> client.waitForAnswer()));
-            }
+            while (answers.size() < activePlayers.size() &&
+                    System.currentTimeMillis() - questionStartTime < QUESTION_TIMEOUT) {
 
-            answerPool.shutdown();
-            try {
-                answerPool.awaitTermination(60, TimeUnit.SECONDS); // Give clients some time to answer
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                for (ClientHandler client : activePlayers) {
+                    if (!answers.contains(client.getCurrentAnswer())) {
+                        if (client.hasAnswerAvailable()) {
+                            String answer = client.getAnswer();
+                            System.out.println("Antwort von " + client + ": " + answer);
+                            answers.add(answer);
 
-            for (Future<String> future : futureAnswers) {
-                try {
-                    String answer = future.get();
-                    if (answer != null) {
-                        answers.add(answer);
-                        // Find the client who sent this answer to update their points
-                        for (ClientHandler client : clients) {
-                            if (client.getLastReceivedMessage().equals(answer)) {
-                                if (answer.equalsIgnoreCase(frage.richtig)) {
-                                    client.incrementPoints();
-                                    correctAnswerGiven = true;
-                                    if (client.getPoints() >= WINNING_POINTS) {
-                                        announceWinner(client);
-                                        gameRunning = false;
-                                        break;
-                                    }
+                            if (answer.equalsIgnoreCase(frage.richtig)) {
+                                client.incrementPoints();
+                                correctAnswerGiven = true;
+
+                                if (client.getPoints() >= WINNING_POINTS) {
+                                    announceWinner(client);
+                                    gameRunning = false;
+                                    break;
                                 }
-                                break; // Move to the next answer
                             }
                         }
-                    } else {
-                        answers.add("TIMEOUT"); // Handle cases where client didn't answer in time
                     }
-                } catch (InterruptedException | ExecutionException e) {
-                    answers.add("ERROR");
-                    e.printStackTrace();
                 }
-                if (!gameRunning) break;
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
-            allAnswered = true; // Consider all active clients have (or haven't) answered
+
+            if (answers.size() < activePlayers.size()) {
+                System.out.println("Timeout - Es fehlen " +
+                        (activePlayers.size() - answers.size()) + " Antworten");
+
+                activePlayers.stream()
+                        .filter(c -> !answers.contains(c.getCurrentAnswer()))
+                        .forEach(c -> {
+                            c.setActivePlayer(false);
+                            System.out.println("Deaktiviere Spieler: " + c);
+                        });
+            }
 
             if (gameRunning) {
                 broadcastResults(answers, frage.richtig, correctAnswerGiven);
-                if (currentQuestionIndex < fragenListe.size() - 1) {
-                    broadcastMessage("NEXT_QUESTION_IN|" + (COUNTDOWN_DELAY / 1000));
-                    try {
-                        Thread.sleep(COUNTDOWN_DELAY);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    currentQuestionIndex++;
-                } else {
-                    gameRunning = false;
-                    broadcastMessage("GAME_OVER|Alle Fragen beantwortet");
+                broadcastMessage("NEXT_QUESTION_COUNTDOWN");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -172,44 +170,43 @@ public class Server_Json {
         resetGame();
     }
 
+    private static List<ClientHandler> getActivePlayers() {
+        return clients.stream()
+                .filter(ClientHandler::isActivePlayer)
+                .collect(Collectors.toList());
+    }
+
     private static void broadcastMessage(String message) {
-        for (ClientHandler client : clients) {
-            client.sendMessage(message);
-        }
+        clients.forEach(c -> c.sendMessage(message));
     }
 
     private static void broadcastQuestion(Frage frage) {
-        for (ClientHandler client : clients) {
-            client.sendQuestion(frage);
-        }
+        clients.forEach(c -> c.sendQuestion(frage));
     }
 
     private static void broadcastResults(List<String> answers, String correctAnswer, boolean correctAnswerGiven) {
         String message = "RESULTS|" + String.join(",", answers) + "|" +
                 correctAnswer + "|" + correctAnswerGiven;
-        for (ClientHandler client : clients) {
-            client.sendMessage(message);
-        }
+        broadcastMessage(message);
     }
 
     private static void announceWinner(ClientHandler winner) {
-        for (ClientHandler client : clients) {
-            if (client == winner) {
-                client.sendMessage("WINNER|Du hast gewonnen mit " + winner.getPoints() + " Punkten!");
+        clients.forEach(c -> {
+            if (c == winner) {
+                c.sendMessage("WINNER|Du hast gewonnen mit " + winner.getPoints() + " Punkten!");
             } else {
-                client.sendMessage("LOST|Der Gewinner hat " + winner.getPoints() + " Punkte erreicht!");
+                c.sendMessage("LOST|Der Gewinner hat " + winner.getPoints() + " Punkte erreicht!");
             }
-        }
+        });
     }
 
     private static void resetGame() {
         gameInProgress = false;
         waitingForStart = true;
-
-        for (ClientHandler client : clients) {
-            client.resetPoints();
-        }
-
+        clients.forEach(c -> {
+            c.resetPoints();
+            c.setActivePlayer(false);
+        });
         updateClientStatus();
     }
 
@@ -235,13 +232,15 @@ public class Server_Json {
         private PrintWriter out;
         private BufferedReader in;
         private int points = 0;
-        private String lastReceivedMessage = "";
+        private String currentAnswer;
         private boolean canStartGame = false;
+        private boolean isActivePlayer = false;
+        private boolean answerAvailable = false;
 
         public ClientHandler(Socket socket) throws IOException {
             this.socket = socket;
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.out = new PrintWriter(socket.getOutputStream(), true);
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
 
         @Override
@@ -249,38 +248,53 @@ public class Server_Json {
             try {
                 String input;
                 while ((input = in.readLine()) != null) {
-                    lastReceivedMessage = input;
+                    System.out.println("Empfangen von " + socket.getRemoteSocketAddress() + ": " + input);
+
                     if (input.equals("START") && canStartGame) {
                         startGame();
+                    } else if (input.matches("[A-Ca-c]")) {
+                        currentAnswer = input.toUpperCase();
+                        answerAvailable = true;
+                        System.out.println("Antwort gespeichert für " + this + ": " + currentAnswer);
                     }
                 }
             } catch (IOException e) {
-                System.err.println("Client-Verbindung unterbrochen: " + e.getMessage());
+                System.err.println("Client-Verbindungsfehler: " + e.getMessage());
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    System.err.println("Fehler beim Schließen des Sockets: " + e.getMessage());
+                    System.err.println("Fehler beim Schließen: " + e.getMessage());
                 }
                 clients.remove(this);
-                System.out.println("Spieler disconnected. Verbleibende Spieler: " + clients.size());
+                System.out.println("Client getrennt: " + socket.getRemoteSocketAddress());
                 updateClientStatus();
             }
         }
 
         public void sendMessage(String message) {
             out.println(message);
+            out.flush();
         }
 
         public void sendQuestion(Frage frage) {
-            out.println("QUESTION|" + frage.frage + "|" +
+            sendMessage("QUESTION|" + frage.frage + "|" +
                     frage.antworten.A + "|" +
                     frage.antworten.B + "|" +
                     frage.antworten.C);
         }
 
-        public String waitForAnswer() throws IOException {
-            return in.readLine();
+        public boolean hasAnswerAvailable() {
+            return answerAvailable;
+        }
+
+        public String getAnswer() {
+            answerAvailable = false;
+            return currentAnswer;
+        }
+
+        public String getCurrentAnswer() {
+            return currentAnswer;
         }
 
         public synchronized void incrementPoints() {
@@ -302,8 +316,20 @@ public class Server_Json {
             sendMessage("CAN_START|" + canStart);
         }
 
-        public String getLastReceivedMessage() {
-            return lastReceivedMessage;
+        public void setActivePlayer(boolean active) {
+            this.isActivePlayer = active;
+            if (!active) {
+                sendMessage("INACTIVE|Du bist jetzt inaktiv");
+            }
+        }
+
+        public boolean isActivePlayer() {
+            return isActivePlayer;
+        }
+
+        @Override
+        public String toString() {
+            return "Client[" + socket.getRemoteSocketAddress() + "]";
         }
     }
 }
