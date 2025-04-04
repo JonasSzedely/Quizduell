@@ -1,4 +1,3 @@
-// client:
 package org.example;
 
 import javax.swing.*;
@@ -6,7 +5,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.*;
 
-public class QuizClient {
+public class Client_Json {
     private JFrame frame;
     private JLabel questionLabel;
     private JButton[] answerButtons;
@@ -19,10 +18,10 @@ public class QuizClient {
     private int points = 0;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new QuizClient2());
+        SwingUtilities.invokeLater(() -> new org.example.Client_Json());
     }
 
-    public QuizClient() {
+    public Client_Json() {
         initializeUI();
         connectToServer();
     }
@@ -121,9 +120,6 @@ public class QuizClient {
             case "CAN_START":
                 setStartButtonEnabled(Boolean.parseBoolean(parts[1]));
                 break;
-            case "NEXT_QUESTION_IN":
-                startNextQuestionCountdown(Integer.parseInt(parts[1]));
-                break;
         }
     }
 
@@ -203,28 +199,24 @@ public class QuizClient {
                     "Keine richtigen Antworten!");
 
             disableAnswerButtons();
-        });
-    }
 
-    private void startNextQuestionCountdown(int seconds) {
-        SwingUtilities.invokeLater(() -> {
-            disableAnswerButtons();
             new Thread(() -> {
-                for (int i = seconds; i > 0; i--) {
-                    final int count = i;
-                    SwingUtilities.invokeLater(() -> {
-                        statusLabel.setText("Nächste Frage in " + count + " Sekunden...");
-                    });
-                    try {
+                try {
+                    Thread.sleep(1000);
+                    for (int i = 5; i > 0; i--) {
+                        final int count = i;
+                        SwingUtilities.invokeLater(() -> {
+                            statusLabel.setText("Nächste Frage in " + count + "...");
+                        });
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                    SwingUtilities.invokeLater(() -> {
+                        statusLabel.setText("Bereit für die nächste Frage");
+                        resetAnswerButtons();
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                SwingUtilities.invokeLater(() -> {
-                    statusLabel.setText("Bereit für die nächste Frage");
-                    resetAnswerButtons();
-                });
             }).start();
         });
     }

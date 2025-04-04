@@ -1,5 +1,5 @@
 // server:
-package org.example;
+package org.Codes.Jonas;
 
 import java.io.*;
 import java.net.*;
