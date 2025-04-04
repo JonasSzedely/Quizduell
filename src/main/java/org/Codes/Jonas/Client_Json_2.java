@@ -1,11 +1,14 @@
-package org.example;
+package org.Codes.Jonas;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
-public class QuizClient_Json {
+public class Client_Json_2 {
     private JFrame frame;
     private JLabel questionLabel;
     private JButton[] answerButtons;
@@ -18,10 +21,10 @@ public class QuizClient_Json {
     private int points = 0;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new QuizClient());
+        SwingUtilities.invokeLater(() -> new Client_Json_2());
     }
 
-    public QuizClient() {
+    public Client_Json_2() {
         initializeUI();
         connectToServer();
     }
