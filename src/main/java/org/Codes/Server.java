@@ -2,12 +2,10 @@ package org.Codes;
 
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
 import java.util.*;
+import java.util.concurrent.*;
 
-public class ServerEsmailVorschlag {
+public class Server {
     private static final List<String[]> fragenListe = new ArrayList<>();
     private static final List<ClientHandler> clients = new ArrayList<>();
     private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>();
