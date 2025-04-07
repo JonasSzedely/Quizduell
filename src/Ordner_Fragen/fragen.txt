@@ -27,609 +27,609 @@ C etwas Paniermehl hineinstreuen
 richtig: C
 
 # Frage 5
-Warum lässt sich Hafermilch schlechter aufschäumen als Kuhmilch?
+*Warum lässt sich Hafermilch schlechter aufschäumen als Kuhmilch?
 A Sie enthält weniger Eiweiss, das den Schaum stabilisiert.
 B Die Ballaststoffe verklumpen bei Hitze leichter.
 C Zugesetztes Fett verhindert die Bildung von Luftbläschen.
 richtig: A
 
 # Frage 6
-Was wir als den markanten Geruch von Erde wahrnehmen, produzieren Mikroben als ...?
+*Was wir als den markanten Geruch von Erde wahrnehmen, produzieren Mikroben als ...?
 A Lockstoff für Springschwänze, die ihnen bei der Verbreitung helfen
 B Schutzschild vor der Zersetzung durch Fäulnisbakterien
 C Signal für die gegenseitige Befruchtung
 richtig: A
 
 # Frage 7
-Welcher Prototyp wurde 2019 auf einer Technologiemesse in Las Vegas vorgestellt, um Hilfseinsätze zu erleichtern?
+*Welcher Prototyp wurde 2019 auf einer Technologiemesse in Las Vegas vorgestellt, um Hilfseinsätze zu erleichtern?
 A Roboter, der Menschen in die stabile Seitenlage bringt
 B Rettungsfahrzeug mit vier Beinen zum Fahren und Klettern
 C Pannendienst, der Leitplanken als Schienen nutzt
 richtig: B
 
 # Frage 8
-Wie wollten französische Hofdamen im 18. Jahrhundert zeigen, dass sie sich vom einfachen Volk unterscheiden?
+*Wie wollten französische Hofdamen im 18. Jahrhundert zeigen, dass sie sich vom einfachen Volk unterscheiden?
 A Sie trugen keine Strümpfe, sodass ihre Knöchel sichtbar waren.
 B Sie zeichneten sich blaue Adern auf ihr Dekolleté.
 C Sie vermieden das Blinzeln, wenn sie mit Männern redeten.
 richtig: B
 
 # Frage 9
-Mit der sogenannten Kipp-Probe lässt sich herausfinden, ob ...?
+*Mit der sogenannten Kipp-Probe lässt sich herausfinden, ob ...?
 A Äpfel am Baum reif sind
 B Weizenbier noch haltbar ist
 C Topfpflanzen genug Erde haben
 richtig: A
 
 # Frage 10
-Um bei Überflutungen besser gewappnet zu sein, wurden in der Metropolregion Tokio ...?
+*Um bei Überflutungen besser gewappnet zu sein, wurden in der Metropolregion Tokio ...?
 A fünf riesige, unterirdische Hallen angelegt
 B alle Parks und Grünanlagen um 20 Meter erhöht
 C grosse Kreuzungen zu überdimensionalen Gullys umfunktioniert
 richtig: A
 
 # Frage 11
-Wovon gab es 2020 in Deutschland Berechnungen zufolge fast 200 Millionen?
+*Wovon gab es 2020 in Deutschland Berechnungen zufolge fast 200 Millionen?
 A D-Mark-Scheine im Umlauf
 B ungenutzte Mobilfunkgeräte in Schubladen
 C herrenlos herumstehende Fahrräder
 richtig: B
 
 # Frage 12
-Woher hat eine in der Tiefsee lebende Seegurke den Spitznamen «Seeschwein»?
+*Woher hat eine in der Tiefsee lebende Seegurke den Spitznamen «Seeschwein»?
 A Sie gibt unter Wasser grunzende Laute von sich.
 B Sie ernährt ihren Nachwuchs durch zwölf Zitzen am Bauch.
 C Sie ist rosa gefärbt und spaziert gerne durch den Schlamm.
 richtig: C
 
 # Frage 13
-Welches Land wird bei einer Autofahrt von Panama nach Mexiko über die Panamericana entlang der Pazifikküste nicht durchkreuzt?
+*Welches Land wird bei einer Autofahrt von Panama nach Mexiko über die Panamericana entlang der Pazifikküste nicht durchkreuzt?
 A Nicaragua
 B Belize
 C Honduras
 richtig: B
 
 # Frage 14
-Worauf ist zu achten, wenn auf der Autobahn durch das Zeichen «Seitenstreifen befahren» der Seitenstreifen freigegeben ist?
+*Worauf ist zu achten, wenn auf der Autobahn durch das Zeichen «Seitenstreifen befahren» der Seitenstreifen freigegeben ist?
 A Das Rechtsfahrgebot ist ausser Kraft gesetzt.
 B Die Höchstgeschwindigkeit beträgt hier 100 km/h.
 C Es muss die doppelte Fahrzeuglänge Abstand gehalten werden.
 richtig: B
 
 # Frage 15
-Warum konnte Hulk-Darsteller Mark Ruffalo die Weltpremiere des Blockbusters «Avengers: Endgame» kaum erwarten?
+*Warum konnte Hulk-Darsteller Mark Ruffalo die Weltpremiere des Blockbusters «Avengers: Endgame» kaum erwarten?
 A Er durfte seine Wohnung in Los Angeles wieder betreten.
 B Er konnte endlich seine Verlobte heiraten.
 C Er wollte erfahren, was in dem Film tatsächlich passiert.
 richtig: C
 
 # Frage 16
-Was machte die 24-Jährige McKenna Knipe während ihres dreihundertsten Skydiving Sprungs in Tampa, Florida?
+*Was machte die 24-Jährige McKenna Knipe während ihres dreihundertsten Skydiving Sprungs in Tampa, Florida?
 A Sie telefonierte mit ihrer Mutter, die sie fragte, wo sie sei.
 B Sie bekam eine Pizza in der Luft überreicht und ass sie.
 C Sie schminkte sich und zog sich ein schickes Kleid an.
 richtig: B
 
 # Frage 17
-Falsches Filet ist im Gegensatz zum echten Rinderfilet ...?
+*Falsches Filet ist im Gegensatz zum echten Rinderfilet ...?
 A nicht zum Kurzbraten geeignet
 B kleiner und dient der Herstellung von Medaillons
 C arm an Myoglobin und deswegen hell gefärbt
 richtig: A
 
 # Frage 18
-Der sogenannte Krallengriff hilft Profis dabei, ...?
+*Der sogenannte Krallengriff hilft Profis dabei, ...?
 A den Billardqueue auch hinter dem Rücken zu kontrollieren
 B sich beim Gemüseschneiden nicht zu verletzen
 C die Spielgeschwindigkeit beim Geigespielen zu erhöhen
 richtig: B
 
 # Frage 19
-Wer Essig und Pflanzenöl im Verhältnis 1:2 mischt, erhält ...?
+*Wer Essig und Pflanzenöl im Verhältnis 1:2 mischt, erhält ...?
 A einen umweltfreundlichen Fleckenlöser für Baumwollkleidung
 B eine wirksame Politur für Holzmöbel
 C eine schleimlösende Mixtur zum Inhalieren gegen Schnupfen
 richtig: A
 
 # Frage 20
-Weshalb wurden Dachdecker in früheren Zeiten auch als «Leyendecker» bezeichnet?
+*Weshalb wurden Dachdecker in früheren Zeiten auch als «Leyendecker» bezeichnet?
 A Zum Transport der Baumaterialien wurden Kräne verwendet.
 B Es war einer der wenigen Berufe ohne Zunftpflicht.
 C Dächer wurden damals oft mit Schieferplatten gedeckt.
 richtig: C
 
 # Frage 21
-Laut einer deutsch-amerikanischen Studie lösen Frauen im Gegensatz zu Männern Aufgaben besser, wenn ...?
+*Laut einer deutsch-amerikanischen Studie lösen Frauen im Gegensatz zu Männern Aufgaben besser, wenn ...?
 A sie für die Aufgaben nur begrenzt Zeit haben
 B Umgebungsgeräusche zu hören sind
 C die Raumtemperatur bei über 20 Grad Celsius liegt
 richtig: C
 
 # Frage 22
-Was wurde Anfang 2020 im britischen Parlament wiederentdeckt?
+*Was wurde Anfang 2020 im britischen Parlament wiederentdeckt?
 A Geheimgang aus dem 17. Jahrhundert
 B Reservekrone von Queen Victoria
 C Skelett eines vermissten Schatzkanzlers
 richtig: A
 
 # Frage 23
-Rentiere sind in der Lage, ...?
+*Rentiere sind in der Lage, ...?
 A Atemluft in der Nase um bis zu 80 Grad Celsius zu erwärmen
 B mit dem Geweih Kälte vom Körper abzuleiten
 C mit den Augen bis zu 5 cm unter die Schneedecke zu blicken
 richtig: A
 
 # Frage 24
-Auf der neuseeländischen Insel Campbell Island ...?
+*Auf der neuseeländischen Insel Campbell Island ...?
 A trainieren NASA-Astronauten in der Woche vor Mond-Missionen
 B gibt es von Pinguinen angefertigte Kunstwerke
 C steht der einsamste Baum der Welt
 richtig: C
 
 # Frage 25
-Welche Erfindung kann schädliche Gase besonders gut absorbieren?
+*Welche Erfindung kann schädliche Gase besonders gut absorbieren?
 A «greifbare Luft»
 B «poröses Vakuum»
 C «trockenes Wasser»
 richtig: C
 
 # Frage 26
-Was muss ein Drei-Sterne-Hotel nicht standardmässig auf dem Zimmer anbieten?
+*Was muss ein Drei-Sterne-Hotel nicht standardmässig auf dem Zimmer anbieten?
 A Zahnpasta
 B Haartrockner
 C Duschgel
 richtig: A
 
 # Frage 27
-Warum waren im Frühjahr 2020 im niedersächsischen Löwenhagen tagelang keine Kirchenglocken zu hören?
+*Warum waren im Frühjahr 2020 im niedersächsischen Löwenhagen tagelang keine Kirchenglocken zu hören?
 A Diebe hatten den kupfernen Klöppel geklaut.
 B Das Warnsignal eines neuen Bahnübergangs übertönte das Läuten.
 C Ein Waschbär hatte die Glockenanlage abgeschaltet.
 richtig: C
 
 # Frage 28
-2019 wurden in Deutschland 2,77 Milliarden ...?
+*2019 wurden in Deutschland 2,77 Milliarden ...?
 A Euro in das deutsche Schienennetz investiert
 B Gigabyte im Mobilfunk verbraucht
 C Kilowattstunden Erdgas genutzt
 richtig: B
 
 # Frage 29
-Turnier- und Rennpferde ...?
+*Turnier- und Rennpferde ...?
 A sind immer Erstgeborene
 B müssen immer ein Adjektiv in ihrem Namen tragen
 C haben auf der Nordhalbkugel alle am 1. Januar Geburtstag
 richtig: C
 
 # Frage 30
-Bananen ...?
+*Bananen ...?
 A sind näher mit der Zucchini verwandt als die Gurke
 B schmecken morgens generell süsser als abends
 C sind eine Quelle für Antimaterie
 richtig: C
 
 # Frage 31
-Eine Schicht Glycerin aus der Apotheke hilft dabei, ...?
+*Eine Schicht Glycerin aus der Apotheke hilft dabei, ...?
 A die Windschutzscheibe langfristig vor Insekten zu schützen
 B Angebranntes im Backofen leichter zu entfernen
 C das Gefrierfach länger eisfrei zu halten
 richtig: C
 
 # Frage 32
-Die Zugabe von Kümmel macht Weisskohl nicht nur würziger und bekömmlicher, sondern ...?
+*Die Zugabe von Kümmel macht Weisskohl nicht nur würziger und bekömmlicher, sondern ...?
 A verringert auch die Garzeit
 B sorgt auch dafür, dass er als Salat knackig bleibt
 C hilft auch gegen den Geruch beim Kochen
 richtig: C
 
 # Frage 33
-Worauf kann Moos im Rasen hindeuten?
+*Worauf kann Moos im Rasen hindeuten?
 A grossflächige unterirdische Ameisengänge
 B Nährstoffmangel im Boden
 C zu hoher Sandanteil des Bodens
 richtig: B
 
 # Frage 34
-Womit überrascht die norwegische Inselgruppe der Lofoten im Polarmeer?
+*Womit überrascht die norwegische Inselgruppe der Lofoten im Polarmeer?
 A Es gibt über 100 Quadratkilometer grosse Korallenriffe.
 B Aufgrund des milden Klimas ist die Pflanzenwelt mediterran.
 C An den Stränden gibt es freilebende Landschildkröten.
 richtig: A
 
 # Frage 35
-Als der Engländer Ken Aston 1966 an einer Ampel stand, ...?
+*Als der Engländer Ken Aston 1966 an einer Ampel stand, ...?
 A hatte er den Einfall, verpackte Paprika in drei Farben anzubieten
 B löste er ein 450 Jahre altes Dreisatz-Mathematikproblem
 C kam ihm die Idee für die gelbe und rote Karte im Fussball
 richtig: C
 
 # Frage 36
-Mit dem sogenannten Tissue clearing ...?
+*Mit dem sogenannten Tissue clearing ...?
 A werden Organe durchsichtig gemacht
 B wird in Belebungsbecken von Kläranlagen Energie erzeugt
 C werden traurige Szenen in Filmkomödien aufgelockert
 richtig: A
 
 # Frage 37
-Salvador Dalí ...?
+*Salvador Dalí ...?
 A spielte die Rolle des Barmanns im Film «Casablanca»
 B arbeitete einige Monate im Zeichentrickstudio von Walt Disney
 C war Schauspielagent vom jungen Antonio Banderas
 richtig: B
 
 # Frage 38
-Durch die in der Psychologie bekannte Tendenz des Gehirns, die eigene Aufmerksamkeit eher nach links als nach rechts zu lenken, ...?
+*Durch die in der Psychologie bekannte Tendenz des Gehirns, die eigene Aufmerksamkeit eher nach links als nach rechts zu lenken, ...?
 A sitzen die ersten Geigen seit dem 19. Jh. links vom Dirigenten
 B wurden neue Siedlungen in der Steinzeit leicht links gedreht erbaut
 C war in der Romantik die rechte Seite von Gemälden dunkler
 richtig: B
 
 # Frage 39
-Womit verdient Ali Baba aus «Ali Baba und die vierzig Räuber» sein Geld?
+*Womit verdient Ali Baba aus «Ali Baba und die vierzig Räuber» sein Geld?
 A Schafhirte
 B Holzfäller
 C Geschichtenerzähler
 richtig: B
 
 # Frage 40
-Welchem Umstand verdankt das erstmals im Mittelalter gebraute Bockbier seinen Namen?
+*Welchem Umstand verdankt das erstmals im Mittelalter gebraute Bockbier seinen Namen?
 A Wer es trank, verspürte danach Lust auf fettige Speisen.
 B In Regensburg gab man der Maische Stroh aus dem Ziegenstall bei.
 C Aus der ehemaligen Hansestadt Einbeck wurde in Bayern «Oan Bock!».
 richtig: C
 
 # Frage 41
-Kann ein Vermieter von Mietern einer Erdgeschosswohnung Betriebskosten für die Fahrstuhlnutzung verlangen?
+*Kann ein Vermieter von Mietern einer Erdgeschosswohnung Betriebskosten für die Fahrstuhlnutzung verlangen?
 A Nein, denn sie benutzen den Aufzug nicht.
 B Ja, wenn es im Mietvertrag vorgesehen ist.
 C nur, wenn das Haus einen Keller hat
 richtig: B
 
 # Frage 42
-Die auf Helgoland brütende Trottellumme kann mehr als 100 Meter tief tauchen, weil ...?
+*Die auf Helgoland brütende Trottellumme kann mehr als 100 Meter tief tauchen, weil ...?
 A sie vor dem Tauchsprung kleine Kieselsteine verschluckt
 B ihre Niere wie eine Schwimmblase funktioniert
 C sie viel Sauerstoff speicherndes Myoglobin in den Muskeln hat
 richtig: C
 
 # Frage 43
-Mithilfe eines alten DVD-Players und einer Haarnadel lässt sich mit ein paar Handgriffen ...?
+*Mithilfe eines alten DVD-Players und einer Haarnadel lässt sich mit ein paar Handgriffen ...?
 A ein Makroobjektiv für das Smartphone basteln
 B eine Campinglampe konstruieren
 C ein tragbarer Lautsprecher bauen
 richtig: A
 
 # Frage 44
-Damit Handtuchhalter zum Aufkleben besser auf Fliesen haften, sollte ...?
+*Damit Handtuchhalter zum Aufkleben besser auf Fliesen haften, sollte ...?
 A die Fliese erst leicht angefeuchtet werden
 B zuvor auf Badreiniger verzichtet werden
 C Babypuder zur Hilfe genommen werden
 richtig: B
 
 # Frage 45
-Welche besondere Eigenschaft zeichnet hydraulischen Mörtel aus?
+*Welche besondere Eigenschaft zeichnet hydraulischen Mörtel aus?
 A Er härtet auch unter Wasser aus.
 B Er härtet auch bei Temperaturen unter -20 Grad Celsius aus.
 C Er bleibt auch nach dem Aushärten elastisch.
 richtig: A
 
 # Frage 46
-Was lässt sich beim Durchwandern von Wäldern in Kalifornien entdecken?
+*Was lässt sich beim Durchwandern von Wäldern in Kalifornien entdecken?
 A Mohnblumen mit einer harten Rinde um den Stängel
 B Ahornbäume mit Dornen am Stamm
 C Mammutbäume mit weissen Nadeln
 richtig: C
 
 # Frage 47
-Deutsche Forscher haben herausgefunden, dass das Tragen eines ...?
+*Deutsche Forscher haben herausgefunden, dass das Tragen eines ...?
 A Ringes die Partnersuche erleichtert
 B Helms beim Kartenspielen risikofreudiger macht
 C Halstuchs das Auswendiglernen von Gedichten fördert
 richtig: B
 
 # Frage 48
-Was sollte bei der Pflege von Sportplätzen aus Kunstrasen regelmässig erledigt werden?
+*Was sollte bei der Pflege von Sportplätzen aus Kunstrasen regelmässig erledigt werden?
 A nach Regenschauern frottieren
 B etwa einmal wöchentlich bürsten
 C jeden Monat die Halme tönen
 richtig: B
 
 # Frage 49
-Worum handelt es sich beim sogenannten Deutschlandtakt?
+*Worum handelt es sich beim sogenannten Deutschlandtakt?
 A Trommel-Rhythmus, der vielen Märschen zugrunde liegt
 B vorgeschriebene Abrechnung telefonischer Zeitintervalle
 C Bahnfahrplan, der landesweit die Verspätungen vermindern soll
 richtig: C
 
 # Frage 50
-Oscarpreisträger Robin Williams schrieb 1993 einen Brief an eine Schule, weil ...?
+*Oscarpreisträger Robin Williams schrieb 1993 einen Brief an eine Schule, weil ...?
 A seine 14-jährige Filmkollegin von der Schule verwiesen wurde
 B er wollte, dass die Schule «Comedy» als Schulfach anbietet
 C er sein Abschlusszeugnis anfechten wollte
 richtig: A
 
 # Frage 51
-48 Meter breit, 24 Meter lang und 13 Meter hoch war ...?
+*48 Meter breit, 24 Meter lang und 13 Meter hoch war ...?
 A die Kamera, die das grösste Fotonegativ aller Zeiten aufnahm
 B das grösste jemals errichtete Kartenhaus
 C der grösste Schokoladenkuchen aller Zeiten
 richtig: A
 
 # Frage 52
-Von wem stammt das Zitat: «Ich habe nicht die Hälfte von dem erzählt, was ich gesehen habe, weil keiner mir geglaubt hätte»?
+*Von wem stammt das Zitat: «Ich habe nicht die Hälfte von dem erzählt, was ich gesehen habe, weil keiner mir geglaubt hätte»?
 A Christoph Kolumbus
 B James Cook
 C Marco Polo
 richtig: C
 
 # Frage 53
-Wirbt ein Hautpflegeprodukt mit der Aufschrift «nicht komedogen», ...?
+*Wirbt ein Hautpflegeprodukt mit der Aufschrift «nicht komedogen», ...?
 A enthält es nur natürliche Konservierungsmittel
 B sollte eine Lagerung bei hoher Luftfeuchte vermieden werden
 C ist es frei von Inhaltsstoffen, die die Hautporen verstopfen
 richtig: C
 
 # Frage 54
-Was ist beim Ziehen von Silikonfugen besonders hilfreich?
+*Was ist beim Ziehen von Silikonfugen besonders hilfreich?
 A Spülmittel, Sprühflasche und Gummihandschuh
 B Metallwinkel, Waschlappen und Rasierschaum
 C Teppichmesser, Holzlöffel und Apfelessig
 richtig: A
 
 # Frage 55
-Die 5:1-Formel des US-amerikanischen Psychologen John Gottman ...?
+*Die 5:1-Formel des US-amerikanischen Psychologen John Gottman ...?
 A hilft dabei, den Schlafrhythmus zu optimieren
 B fördert ein stabiles Beziehungsleben
 C sorgt dafür, dass Termine pünktlich eingehalten werden
 richtig: B
 
 # Frage 56
-Laut eines aktuellen Urteils des Europäischen Gerichtshofs müssen Online-Händler keine ...?
+*Laut eines aktuellen Urteils des Europäischen Gerichtshofs müssen Online-Händler keine ...?
 A Telefonnummer zur Kontaktaufnahme anbieten
 B Retouren von Sonderangeboten akzeptieren
 C einheitlichen Verkaufspreise für Kunden im EU-Ausland anbieten
 richtig: A
 
 # Frage 57
-Der Baumpilz «Fomes fomentarius» eignet sich getrocknet sehr gut, um ...?
+*Der Baumpilz «Fomes fomentarius» eignet sich getrocknet sehr gut, um ...?
 A Lasagneplatten zu ersetzen
 B ein Feuer anzufachen
 C Geruch aus Sportschuhen zu entfernen
 richtig: B
 
 # Frage 58
-Welche tierische Beobachtung Bremer Forscher soll bei der Entwicklung unbemannter Raumsonden helfen?
+*Welche tierische Beobachtung Bremer Forscher soll bei der Entwicklung unbemannter Raumsonden helfen?
 A waagerecht schwimmende Seepferdchen
 B auf dem Kopf landende Heuschrecken
 C mit den Klauen vorausfliegende Greifvögel
 richtig: B
 
 # Frage 59
-Laut Berechnungen könnte die US-amerikanische Regierung 370 Millionen Dollar pro Jahr einsparen, indem sie ...?
+*Laut Berechnungen könnte die US-amerikanische Regierung 370 Millionen Dollar pro Jahr einsparen, indem sie ...?
 A bei der Arbeit ausschliesslich Tee statt Kaffee anbietet
 B getönte Fensterscheiben in Konferenzräume einbauen lässt
 C in ihren Dokumenten die Schriftart «Garamond» verwendet
 richtig: C
 
 # Frage 60
-In immer mehr Städten können digitale Werbetafeln ...?
+*In immer mehr Städten können digitale Werbetafeln ...?
 A von Behörden mit Warnhinweisen überspielt werden
 B mit einer Werbeblocker-App im Vorbeigehen abgeschaltet werden
 C Geschwindigkeitsüberschreitungen von Autos registrieren
 richtig: A
 
 # Frage 61
-Welche Veränderung der 1910er-Jahre in den USA machte unter anderem die Sommer-Blockbuster im Kino möglich?
+*Welche Veränderung der 1910er-Jahre in den USA machte unter anderem die Sommer-Blockbuster im Kino möglich?
 A Aufkommen der Klimaanlage
 B Einführung der Sommerferien
 C Aufhebung des Werbeverbotes während der Sommermonate
 richtig: A
 
 # Frage 62
-«Okjökull» ist Islands ...?
+*«Okjökull» ist Islands ...?
 A Nationalfeiertag, an dem Hunde als Elfen verkleidet werden
 B aktiver Tiefseevulkan, der per Stahlaufzug besichtigt werden kann
 C erster Gletscher, der für «tot» erklärt wurde
 richtig: C
 
 # Frage 63
-Helmut Kohl und Gerhard Schröder ...?
+*Helmut Kohl und Gerhard Schröder ...?
 A spielten beide Mephisto in Schulaufführungen von Goethes «Faust»
 B teilten sich ein Jahr lang offiziell den Kanzlerbungalow
 C hatten beide einen Wellensittich namens Willy
 richtig: B
 
 # Frage 64
-Die Kakaopflanze wurde ursprünglich genutzt, um aus ...?
+*Die Kakaopflanze wurde ursprünglich genutzt, um aus ...?
 A ihren Fasern Stoffbahnen zu weben
 B ihren Bohnen ein Gift für die Jagd zu extrahieren
 C ihrem Fruchtfleisch ein alkoholisches Getränk zu brauen
 richtig: C
 
 # Frage 65
-Welcher dieser Sprünge wird beim Eiskunstlauf gesprungen?
+*Welcher dieser Sprünge wird beim Eiskunstlauf gesprungen?
 A Auerbach
 B Tsukahara
 C Salchow
 richtig: C
 
 # Frage 66
-Forscher haben herausgefunden, dass zehn Minuten Baden im Meer ...?
+*Forscher haben herausgefunden, dass zehn Minuten Baden im Meer ...?
 A die Hautflora grundlegend verändert
 B die Nasenschleimhäute anschwellen lässt
 C die Kopfhaare schneller grau werden lässt
 richtig: A
 
 # Frage 67
-Mittelscharfer Tafelsenf hat meist eine stärkere Gelbfärbung als viele andere Senfsorten, weil ...?
+*Mittelscharfer Tafelsenf hat meist eine stärkere Gelbfärbung als viele andere Senfsorten, weil ...?
 A nur das Innere der Senfsaat verwendet wird
 B der Rohsenf auf mehr als 60 Grad Celsius erhitzt wird
 C ihm Kurkuma untergemischt wird
 richtig: C
 
 # Frage 68
-Wo kommen Schrauben mit Fixiergewinde meist zum Einsatz?
+*Wo kommen Schrauben mit Fixiergewinde meist zum Einsatz?
 A geräuscharmer Holzfussboden
 B stark isolierende Fensterrahmen
 C widerstandsfähige Autofelgen
 richtig: A
 
 # Frage 69
-Warum rief der britische Wissenschaftler Ed Hawkings das Hashtag #ShowYourStripes ins Leben?
+*Warum rief der britische Wissenschaftler Ed Hawkings das Hashtag #ShowYourStripes ins Leben?
 A Er möchte eine Bestandsaufnahme von alten Filmrollen machen.
 B Er fordert Zoos auf, Fotos ihrer Zebras zu veröffentlichen.
 C Er will den Menschen den Klimawandel bewusst machen.
 richtig: C
 
 # Frage 70
-Die Bezeichnung «splitternackt» geht auf die Frühe Neuzeit zurück und meinte ursprünglich das ...?
+*Die Bezeichnung «splitternackt» geht auf die Frühe Neuzeit zurück und meinte ursprünglich das ...?
 A Freilegen des wertvollen Kernholzes eines Baums
 B sorgfältige Entbeinen von Fleisch für Festmahlzeiten
 C Urbarmachen von Waldflächen für die Landwirtschaft
 richtig: A
 
 # Frage 71
-Was gilt seit September 2019 für das Onlinebanking in der EU?
+*Was gilt seit September 2019 für das Onlinebanking in der EU?
 A Einzugsermächtigungen für Lastschriften werden jährlich erneuert.
 B TAN-Listen auf Papier sind nicht mehr erlaubt.
 C Überweisungen per Smartphone sind limitiert auf fünf pro Tag.
 richtig: B
 
 # Frage 72
-In seiner Schrift über die Politik kritisiert Aristoteles die spartanische Volksversammlung als kindisch, da ...?
+*In seiner Schrift über die Politik kritisiert Aristoteles die spartanische Volksversammlung als kindisch, da ...?
 A Versammlungsteilnehmer sich gegenseitig die Schriftrollen klauten
 B Abstimmungen durch Brüllen erfolgten
 C abgewiesene Antragsteller mit Eiern beworfen wurden
 richtig: B
 
 # Frage 73
-Wie lässt sich eine Biskuitrolle aufrollen, ohne dass sie bricht?
+*Wie lässt sich eine Biskuitrolle aufrollen, ohne dass sie bricht?
 A den Teig nach dem Backen mit Mehl bestreuen
 B den noch warmen Teig mit einem gezuckerten Handtuch einrollen
 C ein zusätzliches Ei in den Teig geben
 richtig: B
 
 # Frage 74
-Die Larven der Asphondylia-Gallmücken bewegen sich fort, indem sie ...?
+*Die Larven der Asphondylia-Gallmücken bewegen sich fort, indem sie ...?
 A kleine Sprungfedern in ihren Beinen nutzen
 B an einem seidenen Faden schwingen
 C sich Saltos schlagend durch die Luft katapultieren
 richtig: C
 
 # Frage 75
-Wer in den USA an einer «Tailgate-Party» teilnimmt, ...?
+*Wer in den USA an einer «Tailgate-Party» teilnimmt, ...?
 A fährt mit seinem Gokart möglichst schnell durch viele Gartentore
 B bringt all seine Haustiere mit, damit sie mit anderen spielen können
 C grillt und trinkt vor seinem offenen Kofferraum
 richtig: C
 
 # Frage 76
-Das «Bremer Loch» ...?
+*Das «Bremer Loch» ...?
 A steht für eine fensterlose Innenkabine auf Kreuzfahrtschiffen
 B ist ein Gullydeckel, aus dem die Bremer Stadtmusikanten ertönen
 C bezeichnet eine tiefe Stelle an der Mündung der Weser
 richtig: B
 
 # Frage 77
-7.570 ...?
+*7.570 ...?
 A Meter misst der höchste bisher unbestiegene Berg der Erde
 B Milligramm wiegt ein Kubikmeter Luft
 C Grad Celsius herrschen auf der Oberfläche der Venus
 richtig: A
 
 # Frage 78
-In welcher Sportart wird um den «Spenglercup» gekämpft?
+*In welcher Sportart wird um den «Spenglercup» gekämpft?
 A Eishockey
 B Tennis
 C Segeln
 richtig: A
 
 # Frage 79
-Besucher der westpazifischen Inselgruppe Yap staunen darüber, dass dort ...?
+*Besucher der westpazifischen Inselgruppe Yap staunen darüber, dass dort ...?
 A das Geld auf der Strasse liegt
 B nur Essen, das gekocht worden ist, etwas kostet
 C Kinder ab sechs Jahren ihre eigenen Wohnungen haben
 richtig: A
 
 # Frage 80
-Die im Norden Englands gelegene Stott Hall Farm ist die Heimat von 900 Zuchtschafen und ...?
+*Die im Norden Englands gelegene Stott Hall Farm ist die Heimat von 900 Zuchtschafen und ...?
 A ist auf den Flaschenetiketten aller britischen Biere zu sehen
 B liegt zwischen den beiden Richtungsfahrbahnen einer Autobahn
 C ist der Geburtsort von Theresa May und Elton John
 richtig: B
 
 # Frage 81
-Laut einer Entscheidung der Stadt Wien verstösst es gegen die seit 2018 in Europa geltende Datenschutzgrundverordnung, wenn ...?
+*Laut einer Entscheidung der Stadt Wien verstösst es gegen die seit 2018 in Europa geltende Datenschutzgrundverordnung, wenn ...?
 A auf einem Kaffeebecher der Vorname eines Kunden steht
 B ein Friseur den Namen eines Kunden erfragt
 C ein Vermieter ein Klingelschild mit dem Mieternamen anbringt
 richtig: C
 
 # Frage 82
-Welches Recht wurde 1907 den Kellnern der Pariser Bistros eingeräumt, nachdem sie wochenlang dafür gestreikt hatten?
+*Welches Recht wurde 1907 den Kellnern der Pariser Bistros eingeräumt, nachdem sie wochenlang dafür gestreikt hatten?
 A Baskenmützen in ihrer Freizeit zu tragen
 B sich einen Schnurrbart wachsen zu lassen
 C vom Gast unverzehrte Baguettes mit nach Hause zu nehmen
 richtig: B
 
 # Frage 83
-Warum gibt es in der amerikanischen College-Basketball-Liga keine Rückennummern von 6 bis 9?
+*Warum gibt es in der amerikanischen College-Basketball-Liga keine Rückennummern von 6 bis 9?
 A um die Produktionskosten der Trikots niedrig zu halten
 B damit die Schiedsrichter sich leichter verständigen können
 C weil die Nummern an inaktive Legenden vergeben wurden
 richtig: B
 
 # Frage 84
-Junge Hennen legen ...?
+*Junge Hennen legen ...?
 A keine Eier, wenn es dunkel ist
 B nur Eier, wenn keine alten Hennen in der Nähe sind
 C häufig Eier mit zwei Dottern
 richtig: C
 
 # Frage 85
-Ein Deo-Roller zum Nachfüllen hilft auch bei ...?
+*Ein Deo-Roller zum Nachfüllen hilft auch bei ...?
 A schmerzenden Muskeln
 B Hausstauballergie
 C altersbedingter Weitsichtigkeit
 richtig: A
 
 # Frage 86
-Was kann in der Küche zum Verschliessen von offenen Tüten genutzt werden?
+*Was kann in der Küche zum Verschliessen von offenen Tüten genutzt werden?
 A Dosenöffner und Teelöffel
 B Gemüseschäler und Blatt Papier
 C Messer und Korken
 richtig: C
 
 # Frage 87
-Der Waffle-House-Index in den USA gibt einen Hinweis darauf, wie ...?
+*Der Waffle-House-Index in den USA gibt einen Hinweis darauf, wie ...?
 A gross die Schäden nach einem Sturm sind
 B viele Amerikaner Übergewicht haben
 C sich der Kurs des Dollars aktuell entwickelt
 richtig: A
 
 # Frage 88
-Wochentags zwischen 16 und 19 Uhr ist ...?
+*Wochentags zwischen 16 und 19 Uhr ist ...?
 A die beste Zeit, um Sport zu treiben
 B eine gute Zeit, um Zitrusfrüchte zu essen
 C die menschliche Empathie Fähigkeit besonders hoch
 richtig: A
 
 # Frage 89
-Die Wählervereinigung «Pro Bockwurst» ...?
+*Die Wählervereinigung «Pro Bockwurst» ...?
 A ist eigentlich eine vegane Bewegung
 B wurde im Sommer 2018 von Uli Hoeness gegründet
 C stellt seit Oktober 2018 den Oberbürgermeister in Ilmenau
 richtig: C
 
 # Frage 90
-Bonner Forscher fanden 2018 heraus, dass Feinstaub ...?
+*Bonner Forscher fanden 2018 heraus, dass Feinstaub ...?
 A als Düngemittel verwendet werden kann
 B in Kombination mit Sonneneinstrahlung ein klebriges Harz bildet
 C Bäumen über die Blätter Feuchtigkeit entzieht
 richtig: C
 
 # Frage 91
-Von welchem Instrument wird vor einer Orchesteraufführung der Kammerton a' vorgegeben?
+*Von welchem Instrument wird vor einer Orchesteraufführung der Kammerton a' vorgegeben?
 A Cello
 B Trompete
 C Oboe
