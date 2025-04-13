@@ -16,7 +16,6 @@ public class Server {
     public static void main(String[] args) {
         String dateiPfad = "src/Ordner_Fragen/fragen.txt";
         ladeFragen(dateiPfad);
-
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server läuft auf Port " + port);
             System.out.println("Warten auf Spieler ... ");
@@ -37,6 +36,11 @@ public class Server {
         } catch (IOException e) {
             System.err.println("Fehler beim Starten des Servers: " + e.getMessage());
         }
+    }
+
+
+    private static synchronized boolean maxPunkteErreicht() {
+        return punkteMap.values().stream().anyMatch(punkte -> punkte >= 5);
     }
 
     private static void informiereSpieler() {
@@ -128,24 +132,54 @@ public class Server {
 
         @Override
         public void run() {
+            Collections.shuffle(fragenListe);
             try {
                 for (String[] frage : fragenListe) {
                     if (beantwortet.contains(frage[0])) continue;
-
+                    // 1. Frage senden
                     sendFrageAnClient(frage);
+
+                    // 2. Antwort empfangen & Punkte updaten
                     String antwort = in.readLine();
                     processAntwortDesClients(antwort, frage);
+
+                    // 3. SOFORT ALLE CLIENTS BEENDEN, FALLS 5 PUNKTE ERREICHT
+                    if (maxPunkteErreicht()) {
+                        clients.forEach(client -> {
+                            if (client.out != null) {
+                                int eigenePunkte = punkteMap.getOrDefault(clientName, 0);
+                                client.out.println("ENDE_DES_SPIELS");  // Signal an alle Clients
+                                client.out.println("Das Spiel ist beendet! Ihre Gesamtpunkte beträgt: " + eigenePunkte);
+                                zeigeErgebnisse();
+                            }
+                        });
+                        break;  // Schleife verlassen
+                    }
                 }
+                // Falls die Schleife natürlich endet (alle Fragen beantwortet)
+                if (!maxPunkteErreicht()) {
+                    out.println("ENDE_DES_SPIELS");
+                    out.println("Alle Fragen beantwortet! Spiel beendet.");
+                }
+
+                /* ALT
 
                 int eigenePunkte = punkteMap.getOrDefault(clientName, 0);
                 out.println("Das Spiel ist beendet! Ihre Gesamtpunkte beträgt: " + eigenePunkte);
                 zeigeErgebnisse();
+
+                */
+
+
+
             } catch (IOException e) {
                 System.err.println("Fehler bei der Kommunikation mit dem Client: " + e.getMessage());
             } finally {
                 closeSocket();
             }
         }
+
+
 
         private void sendFrageAnClient(String[] frage) {
             out.println(frage[0]); // Frage Nummer
@@ -169,6 +203,8 @@ public class Server {
                 }
             }
         }
+
+
 
         private void zeigeErgebnisse() {
             StringBuilder ergebnis = new StringBuilder();

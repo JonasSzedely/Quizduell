@@ -16,8 +16,8 @@ public class Server_Json {
     private static final long COUNTDOWN_DELAY = 5000;
     private static final int WINNING_POINTS = 5;
     private static final int QUESTION_TIMEOUT = 30000;
-    private static boolean gameInProgress = false;
-    private static boolean waitingForStart = true;
+    private static boolean GAME_IN_PROGRESS = false;
+    private static boolean WAITING_FOR_START = true;
 
     public static void main(String[] args) {
         ladeFragen("src/Ordner_Fragen/fragen.json");
@@ -41,7 +41,7 @@ public class Server_Json {
 
     private static void updateClientStatus() {
         String status;
-        if (gameInProgress) {
+        if (GAME_IN_PROGRESS) {
             status = "GAME_IN_PROGRESS";
         } else if (clients.size() < 2) {
             status = "WAITING_FOR_PLAYERS|Es werden mindestens 2 Spieler benötigt";
@@ -53,7 +53,7 @@ public class Server_Json {
 
         clients.forEach(c -> {
             c.sendMessage("STATUS|" + status);
-            c.setCanStartGame(clients.size() >= 2 && clients.size() <= 10 && !gameInProgress && waitingForStart);
+            c.setCanStartGame(clients.size() >= 2 && clients.size() <= 10 && !GAME_IN_PROGRESS && WAITING_FOR_START);
         });
     }
 
@@ -62,7 +62,7 @@ public class Server_Json {
             String json = new String(Files.readAllBytes(Paths.get(dateiPfad)));
             Gson gson = new Gson();
             FragenContainer container = gson.fromJson(json, FragenContainer.class);
-            fragenListe = container.fragen;
+            fragenListe = container.fragen_json;
             System.out.println("Geladene Fragen: " + fragenListe.size());
         } catch (IOException e) {
             System.err.println("Fehler beim Laden der Fragen: " + e.getMessage());
@@ -70,13 +70,13 @@ public class Server_Json {
     }
 
     public static synchronized void startGame() {
-        if (gameInProgress || clients.size() < 2 || clients.size() > 10) {
+        if (GAME_IN_PROGRESS || clients.size() < 2 || clients.size() > 10) {
             return;
         }
 
         clients.forEach(c -> c.setActivePlayer(true));
-        waitingForStart = false;
-        gameInProgress = true;
+        WAITING_FOR_START = false;
+        GAME_IN_PROGRESS = true;
         System.out.println("Spiel startet mit " + clients.size() + " Spielern");
         broadcastMessage("COUNTDOWN_START");
 
@@ -201,8 +201,8 @@ public class Server_Json {
     }
 
     private static void resetGame() {
-        gameInProgress = false;
-        waitingForStart = true;
+        GAME_IN_PROGRESS = false;
+        WAITING_FOR_START = true;
         clients.forEach(c -> {
             c.resetPoints();
             c.setActivePlayer(false);
@@ -211,7 +211,7 @@ public class Server_Json {
     }
 
     private static class FragenContainer {
-        List<Frage> fragen;
+        List<Frage> fragen_json;
     }
 
     public static class Frage {

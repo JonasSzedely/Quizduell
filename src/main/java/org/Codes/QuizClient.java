@@ -32,7 +32,7 @@ public class QuizClient {
         // Frage-Label für Fragen Nummer initialisieren
         fragenNummer = new JLabel("Hier steht die FragenNr.", SwingConstants.CENTER);
         fragenNummer.setFont(new Font("Arial", Font.BOLD, 24)); // Schriftgröße erhöhen
-        w1.add(fragenNummer); // Frage oben platzieren
+        w1.add(fragenNummer); // Frage oben platzieren*/
 
         // Frage-Label initialisieren
         frage = new JLabel("Hier steht die Frage selbst", SwingConstants.CENTER);
