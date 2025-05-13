@@ -2,156 +2,227 @@ package org.Codes;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 
+/**
+ * Ein Quiz-Client, der sich mit dem Quiz-Server verbindet und ein GUI für die Spielinteraktion bereitstellt.
+ * Das Spiel startet automatisch für alle Clients, sobald ein Client den Start-Button drückt.
+ */
 public class QuizClient {
-    private Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    private JLabel fragenNummer, frage;
-    private JButton[] ant = new JButton[3]; // A, B, C Antwort Button
-    private JButton startButton;
-    private JFrame w1;
-    private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private final int port = 1404; // Iranische Kalender Jahr als Port-Schlüssel gemerkt. :-). ---> nicht vorreserviert in bekannte Netzwerkdiensten.
-    private boolean quizStarted = false;
+    /** Bildschirmauflösung für die GUI-Positionierung */
+    private Dimension bildschirmAufloesung = Toolkit.getDefaultToolkit().getScreenSize();
 
+    /** Label für die Anzeige der Frage */
+    private JLabel frageLabel;
+
+    /** Buttons für die Antwortmöglichkeiten (A, B, C) */
+    private JButton[] antwortButtons = new JButton[3];
+
+    /** Button zum Starten des Quiz-Spiels */
+    private JButton startButton;
+
+    /** Hauptfenster der Anwendung */
+    private JFrame hauptFenster;
+
+    /** Socket für die Verbindung zum Server */
+    private Socket socket;
+
+    /** Ausgabestream zum Senden von Nachrichten an den Server */
+    private PrintWriter ausgang;
+
+    /** Eingabestream zum Empfangen von Nachrichten vom Server */
+    private BufferedReader eingang;
+
+    /** Portnummer für die Serververbindung */
+    private final int port = 1404;
+
+    /** Status, ob das Quiz gestartet wurde */
+    private boolean quizGestartet = false;
+
+    /** Speichert die letzte vom Spieler gegebene Antwort */
+    private String letzteAntwort;
+
+    /**
+     * Hauptmethode zum Starten des Clients
+     * @param args Keine Eingabeparameter erforderlich
+     */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(QuizClient::new); // GUI im Event Dispatch Thread starten
+        SwingUtilities.invokeLater(QuizClient::new);
     }
 
+    /**
+     * Konstruktor für den QuizClient
+     */
     public QuizClient() {
-        w1 = new JFrame("QuizDuell, Wer ist der Beste!!!");
-        w1.setSize(1200, 600);
-        w1.setLocation((int) (dim.getWidth() / 2 - 400), (int) (dim.getHeight() / 2 - 300));
-        w1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        w1.setLayout(new GridLayout(3, 1));
+        initialisiereGUI();
+        verbindeMitServer();
+    }
 
-        // Frage-Label für Fragen Nummer initialisieren
-        fragenNummer = new JLabel("Hier steht die FragenNr.", SwingConstants.CENTER);
-        fragenNummer.setFont(new Font("Arial", Font.BOLD, 24)); // Schriftgröße erhöhen
-        w1.add(fragenNummer); // Frage oben platzieren*/
+    /**
+     * Initialisiert die GUI-Komponenten des Clients
+     */
+    private void initialisiereGUI() {
+        hauptFenster = new JFrame("QuizDuell - Wer ist der Beste?");
+        hauptFenster.setSize(1200, 600);
+        hauptFenster.setLocation(
+                (int) (bildschirmAufloesung.getWidth() / 2 - 400),
+                (int) (bildschirmAufloesung.getHeight() / 2 - 300)
+        );
+        hauptFenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        hauptFenster.setLayout(new BorderLayout());
 
-        // Frage-Label initialisieren
-        frage = new JLabel("Hier steht die Frage selbst", SwingConstants.CENTER);
-        frage.setFont(new Font("Arial", Font.BOLD, 18)); // Schriftgröße erhöhen
-        w1.add(frage); // Frage in der Mitte platzieren
+        // Frage-Label (zentriert mit größerer Schrift)
+        frageLabel = new JLabel("Warte auf Spielstart...", SwingConstants.CENTER);
+        frageLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        hauptFenster.add(frageLabel, BorderLayout.CENTER);
 
-        // Panel für die Antwort-Buttons
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 1));
+        // Panel für die Buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
 
-        // Buttons initialisieren und zum Panel hinzufügen
-        for (int i = 0; i < 3; i++) { // Nur 3 Antworten (A, B, C)
-            ant[i] = new JButton("Antwort: " + (char) ('A' + i)); // Setze Button-Text auf "Antwort: A", "Antwort: B", "Antwort: C"
-            final int index = i;
-            ant[i].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String answer = String.valueOf((char) ('A' + index)); // Die gewählte Antwort
-                    sendAnswer(answer.trim()); // Sende die gewählte Antwort an den Server
-                    // Deaktiviere die Buttons, während auf die Antwort gewartet wird
-                    for (JButton button : ant) {
-                        button.setEnabled(false);
-                    }
+        // Antwort-Buttons
+        for (int i = 0; i < 3; i++) {
+            antwortButtons[i] = new JButton();
+            antwortButtons[i].setFont(new Font("Arial", Font.PLAIN, 18));
+            final char antwort = (char) ('A' + i);  // final hinzugefügt
+            antwortButtons[i].addActionListener(e -> {
+                letzteAntwort = String.valueOf(antwort); // Antwort speichern
+                sendeAntwort(letzteAntwort);
+                for (JButton button : antwortButtons) {
+                    button.setEnabled(false);
                 }
             });
-            ant[i].setEnabled(false);
-            buttonPanel.add(ant[i]);
+            antwortButtons[i].setEnabled(false);
+            buttonPanel.add(antwortButtons[i]);
         }
 
-        // Start-Button initialisieren
-        startButton = new JButton("Starten");
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startQuiz();
-            }
+        // Start-Button
+        startButton = new JButton("Quiz starten");
+        startButton.setFont(new Font("Arial", Font.BOLD, 18));
+        startButton.addActionListener(e -> {
+            ausgang.println("START");
+            startButton.setEnabled(false);
         });
-        buttonPanel.add(startButton, SwingConstants.BOTTOM);
+        buttonPanel.add(startButton);
 
-        w1.add(buttonPanel); // Button-Panel unten platzieren
-        w1.setVisible(true);
-        connectToServer();
+        hauptFenster.add(buttonPanel, BorderLayout.SOUTH);
+        hauptFenster.setVisible(true);
     }
 
-    private void connectToServer() {
+    /**
+     * Stellt eine Verbindung zum Quiz-Server her
+     */
+    private void verbindeMitServer() {
         try {
             socket = new Socket("localhost", port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ausgang = new PrintWriter(socket.getOutputStream(), true);
+            eingang = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            new Thread(() -> {
+                try {
+                    String nachricht;
+                    while ((nachricht = eingang.readLine()) != null) {
+                        if (nachricht.startsWith("STATUS|")) {
+                            String status = nachricht.split("\\|")[1];
+                            SwingUtilities.invokeLater(() -> {
+                                if (status.startsWith("WARTEN")) {
+                                    frageLabel.setText(status.split("\\|")[1]);
+                                    startButton.setEnabled(false);
+                                } else if (status.startsWith("BEREIT")) {
+                                    frageLabel.setText(status.split("\\|")[1]);
+                                    startButton.setEnabled(true);
+                                }
+                            });
+                        }
+                        else if (nachricht.startsWith("FRAGE|")) {
+                            String frageText = nachricht.split("\\|")[1];  // final nicht nötig, da neu zugewiesen
+                            SwingUtilities.invokeLater(() -> {
+                                frageLabel.setText(frageText);
+                                for (JButton button : antwortButtons) {
+                                    button.setEnabled(true);
+                                }
+                            });
+                        }
+                        else if (nachricht.startsWith("A: ")) {
+                            final String nachrichtA = nachricht;  // final Kopie
+                            SwingUtilities.invokeLater(() -> antwortButtons[0].setText(nachrichtA));
+                        }
+                        else if (nachricht.startsWith("B: ")) {
+                            final String nachrichtB = nachricht;  // final Kopie
+                            SwingUtilities.invokeLater(() -> antwortButtons[1].setText(nachrichtB));
+                        }
+                        else if (nachricht.startsWith("C: ")) {
+                            final String nachrichtC = nachricht;  // final Kopie
+                            SwingUtilities.invokeLater(() -> antwortButtons[2].setText(nachrichtC));
+                        }
+                        else if (nachricht.startsWith("RICHTIG|")) {
+                            String finalNachricht = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht.split("\\|")[1]);
+                            });
+                        }
+                        else if (nachricht.startsWith("FALSCH|")) {
+                            String finalNachricht1 = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht1.split("\\|")[1]);
+                            });
+                        }
+                        else if (nachricht.startsWith("GEWINNER|")) {
+                            String finalNachricht2 = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht2.split("\\|")[1]);
+                                for (JButton button : antwortButtons) {
+                                    button.setEnabled(false);
+                                }
+                            });
+                        }
+                    }
+                } catch (IOException e) {
+                    if (!socket.isClosed()) {
+                        zeigeFehler("Verbindungsfehler", "Verbindung zum Server verloren.");
+                    }
+                }
+            }).start();
+
         } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(w1, "Verbindung zum Server konnte nicht hergestellt werden. Bitte sicherstellen, dass der Server läuft und der Port korrekt ist.");
+            zeigeFehler("Verbindungsfehler", "Server nicht erreichbar. Bitte starten Sie den Server zuerst.");
         }
     }
 
-    private void startQuiz() {
-        quizStarted = true;
+
+    /**
+     * Startet das Quiz auf Client-Seite
+     */
+    private void starteQuiz() {
         startButton.setEnabled(false);
-        for (JButton button : ant) {
+        quizGestartet = true;
+        for (JButton button : antwortButtons) {
             button.setEnabled(true);
         }
-        displayQuestions();
     }
 
-    private void displayQuestions() {
-        new Thread(() -> { // Erstelle einen neuen Thread für die Fragenanzeige
-            try {
-                String line;
-                while (quizStarted) {
-                    String frageNr = in.readLine(); // FrageNr empfangen
-                    if (frageNr == null) {
-                        break; // Beende die Schleife, wenn keine Fragen mehr vorhanden sind
-                    }
-                    SwingUtilities.invokeLater(() -> fragenNummer.setText(frageNr)); // FrageNr aktualisieren
-
-                    String frageText = in.readLine(); // Frage selbst empfangen
-                    if (frageText == null) {
-                        JOptionPane.showMessageDialog(w1, "Fehler beim Empfangen der Frage. Bitte überprüfen Sie den Server.");
-                        return;
-                    }
-                    SwingUtilities.invokeLater(() -> frage.setText(frageText)); // Frage aktualisieren
-
-                    // Antworten empfangen
-                    for (int i = 0; i < 3; i++) {
-                        line = in.readLine();
-                        if (line == null) {
-                            JOptionPane.showMessageDialog(w1, "Fehler beim Empfangen der Antworten. Bitte überprüfen Sie den Server.");
-                            return;
-                        }
-                        final String antwortText = line.split(": ")[1]; // Extrahiere die Antwort nach dem ": "
-                        final int finalI = i;
-                        SwingUtilities.invokeLater(() -> ant[finalI].setText("Antwort: " + antwortText)); // Antwort-Buttons aktualisieren
-                    }
-
-                    // Warte auf die Rückmeldung des Servers (Richtig/Falsch)
-                    String responseMessage = in.readLine();
-                    if (responseMessage != null) {
-                        SwingUtilities.invokeLater(() -> {
-                            JOptionPane.showMessageDialog(w1, responseMessage);
-                            // Frage-Buttons wieder aktivieren, um die nächste Frage zu ermöglichen
-                            for (JButton button : ant) {
-                                button.setEnabled(true);
-                            }
-                        });
-                    }
-                }
-
-                // Wenn keine Fragen mehr vorhanden sind
-                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(w1, "Das Spiel ist beendet! Ihre Ergebnisse werden ausgewertet...")); // Nachricht anzeigen
-                for (JButton button : ant) {
-                    button.setEnabled(true);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+    /**
+     * Sendet die Antwort des Spielers an den Server
+     * @param antwort Die ausgewählte Antwort (A, B oder C)
+     */
+    private void sendeAntwort(String antwort) {
+        ausgang.println(antwort);
     }
 
-    private void sendAnswer(String answer) {
-        out.println(answer); // Sende die Antwort an den Server
+    /**
+     * Zeigt eine Nachricht in einem Dialog an
+     * @param nachricht Die anzuzeigende Nachricht
+     */
+    private void zeigeNachricht(String nachricht) {
+        JOptionPane.showMessageDialog(hauptFenster, nachricht);
+    }
+
+    /**
+     * Zeigt einen Fehlerdialog an
+     * @param titel Der Titel des Dialogs
+     * @param nachricht Die Fehlernachricht
+     */
+    private void zeigeFehler(String titel, String nachricht) {
+        JOptionPane.showMessageDialog(hauptFenster, nachricht, titel, JOptionPane.ERROR_MESSAGE);
     }
 }
