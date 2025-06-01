@@ -45,8 +45,11 @@ public class Server2 {
     /** Pfad zur JSON-Datei mit den Fragen. */
     private static final String JSON_PFAD = "src/Ordner_Fragen/fragen.json";
 
-    /** Startet das Spiel, wenn deaktiviert. */
+    /** Status, ob auf Start gewartet wird. */
     private static boolean wartetAufStart = true;
+
+    /** Counter für Anzahl der bereitgestellten Spieler. */
+    private static int bereitgestellteSpieler = 0;
 
     public static void main(String[] args) {
         ladeFragenAusJson(JSON_PFAD);
@@ -66,7 +69,6 @@ public class Server2 {
                 System.out.println(spielerName + " verbunden!");
                 broadcastStatus();
             }
-
         } catch (IOException e) {
             System.err.println("Serverfehler: " + e.getMessage());
         }
@@ -199,6 +201,7 @@ public class Server2 {
     private static void resetSpiel() {
         punkteMap.clear();
         beantworteteFragen.clear();
+        bereitgestellteSpieler = 0;  // Reset der Spieleranzahl
         for (ClientHandler client : clients) {
             client.resetAntwort();
         }
@@ -247,7 +250,8 @@ public class Server2 {
                 while ((nachricht = eingang.readLine()) != null) {
                     if (nachricht.equalsIgnoreCase("START")) {
                         synchronized (LOCK) {
-                            if (clients.size() == MAX_SPIELER && wartetAufStart) {
+                            bereitgestellteSpieler++;
+                            if (bereitgestellteSpieler == MAX_SPIELER) {
                                 wartetAufStart = false;
                                 starteSpiel();
                             }
@@ -269,6 +273,9 @@ public class Server2 {
                     System.err.println("Fehler beim Schließen des Sockets: " + e.getMessage());
                 }
                 clients.remove(this);
+                synchronized (LOCK) {
+                    bereitgestellteSpieler--; // Spieleranzahl dekrementieren, wenn ein Client sich trennt
+                }
             }
         }
 

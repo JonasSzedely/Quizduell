@@ -50,7 +50,7 @@ public class QuizClient3 {
     private String letzteAntwort;
 
     /** Spielername */
-    private String spielerName = "Spieler 1"; // Beispielname
+    private String spielerName = "Spieler 1";
 
     /** Aktuelle Punktzahl des Spielers */
     private int punktzahl = 0;
@@ -247,9 +247,9 @@ public class QuizClient3 {
      */
     private void erholePunkte(boolean richtig) {
         if (richtig) {
-            punktzahl += 1; // Erhöhen Sie die Punktzahl um 1 für eine richtige Antwort
+            punktzahl += 1; // Erhöhre die Punktzahl um 1 für eine richtige Antwort
         }
-        // Keine Punkte für falsche Antworten; wir ignorieren diese
+        // Keine Punkte für falsche Antworten! --> ignorieren
 
         // Aktualisiere das Punkte-Label
         punkteLabel.setText("Punkte: " + punktzahl);
