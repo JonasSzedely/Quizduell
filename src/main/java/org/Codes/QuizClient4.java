@@ -50,7 +50,7 @@ public class QuizClient4 {
     private String letzteAntwort;
 
     /** Spielername */
-    private String spielerName = "Spieler 1"; // Beispielname
+    private String spielerName = "Spieler 1";
 
     /** Aktuelle Punktzahl des Spielers */
     private int punktzahl = 0;
@@ -159,6 +159,15 @@ public class QuizClient4 {
                                 spielerNameLabel.setText(spielerName); // Aktualisiere das Label
                             });
                         }
+                        else if (nachricht.startsWith("FRAGE|")) {
+                            String frageText = nachricht.split("\\|")[1];  // final nicht nötig, da neu zugewiesen
+                            SwingUtilities.invokeLater(() -> {
+                                frageLabel.setText(frageText);
+                                for (JButton button : antwortButtons) {
+                                    button.setEnabled(true);
+                                }
+                            });
+                        }
                         else if (nachricht.startsWith("A: ")) {
                             final String nachrichtA = nachricht;  // final Kopie
                             SwingUtilities.invokeLater(() -> antwortButtons[0].setText(nachrichtA));
@@ -172,6 +181,12 @@ public class QuizClient4 {
                             SwingUtilities.invokeLater(() -> antwortButtons[2].setText(nachrichtC));
                         }
                         else if (nachricht.startsWith("RICHTIG|")) {
+                            String finalNachricht = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht.split("\\|")[1]);
+                                erholePunkte(true); // Punkte erhöhen
+                            });
+                        }else if (nachricht.startsWith("ersterRichtigerSpieler")) {
                             String finalNachricht = nachricht;
                             SwingUtilities.invokeLater(() -> {
                                 zeigeNachricht(finalNachricht.split("\\|")[1]);
@@ -238,7 +253,7 @@ public class QuizClient4 {
      */
     private void erholePunkte(boolean richtig) {
         if (richtig) {
-            punktzahl += 1; // Erhöh  die Punktzahl um 1 für eine richtige Antwort
+            punktzahl += 1; // Erhöhre die Punktzahl um 1 für eine richtige Antwort
         }
         // Keine Punkte für falsche Antworten! --> ignorieren
 

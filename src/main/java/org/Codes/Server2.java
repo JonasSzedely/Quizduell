@@ -2,7 +2,6 @@ package org.Codes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,50 +20,29 @@ import java.util.concurrent.Executors;
  * Die Clients erhalten synchronisierte Fragen und können gegeneinander antreten.
  */
 public class Server2 {
-    /** Liste aller geladenen Fragen. */
     private static List<Frage> fragenListe = new ArrayList<>();
-
-    /** Liste aller verbundenen Clients. */
     private static final List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
-
-    /** Map zur Speicherung der Punkte jedes Spielers. */
     private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>();
-
-    /** Set zur Vermeidung doppelter Fragen. */
     private static final Set<Integer> beantworteteFragen = Collections.synchronizedSet(new HashSet<>());
-
-    /** Portnummer für die Serververbindung. */
     private static final int PORT = 1404;
-
-    /** Maximale Anzahl an Spielern. */
     private static final int MAX_SPIELER = 2;
-
-    /** Lock-Objekt für Thread-Synchronisation. */
     private static final Object LOCK = new Object();
-
-    /** Pfad zur JSON-Datei mit den Fragen. */
     private static final String JSON_PFAD = "src/Ordner_Fragen/fragen.json";
-
-    /** Status, ob auf Start gewartet wird. */
     private static boolean wartetAufStart = true;
-
-    /** Counter für Anzahl der bereitgestellten Spieler. */
     private static int bereitgestellteSpieler = 0;
 
     public static void main(String[] args) {
         ladeFragenAusJson(JSON_PFAD);
         Collections.shuffle(fragenListe);
-
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server läuft auf Port " + PORT);
             ExecutorService pool = Executors.newFixedThreadPool(MAX_SPIELER);
-
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 String spielerName = "Spieler " + (clients.size() + 1);
                 ClientHandler client = new ClientHandler(clientSocket, spielerName);
                 clients.add(client);
-                client.sendeNachricht("SPIELERNAME|" + spielerName); // Sendet den Spielernamen zum Client
+                client.sendeNachricht("SPIELERNAME|" + spielerName);
                 pool.execute(client);
                 System.out.println(spielerName + " verbunden!");
                 broadcastStatus();
@@ -105,22 +83,18 @@ public class Server2 {
     private static void starteSpiel() {
         System.out.println("Spiel startet mit " + clients.size() + " Spielern!");
         broadcastNachricht("SPIEL_STARTET");
-        wartetAufStart = true;
+        wartetAufStart = false;
 
         new Thread(() -> {
             for (Frage frage : fragenListe) {
-                if (beantworteteFragen.contains(frage.id))
-                    continue;
-
+                if (beantworteteFragen.contains(frage.id)) continue;
                 sendeFrageAnAlle(frage);
                 warteAufAntworten(frage);
-
                 if (hatGewinner()) {
                     zeigeGewinner();
                     break;
                 }
             }
-
             if (!hatGewinner()) {
                 broadcastNachricht("SPIEL_ENDE|Kein Gewinner – alle Fragen beantwortet!");
             }
@@ -138,32 +112,40 @@ public class Server2 {
 
     private static void warteAufAntworten(Frage frage) {
         boolean[] hatGeantwortetFlag = new boolean[clients.size()];
+        String ersterRichtigerSpieler = null;
 
         synchronized (LOCK) {
             while (true) {
+                boolean alleGeantwortet = true;
+
                 for (int i = 0; i < clients.size(); i++) {
                     ClientHandler client = clients.get(i);
-                    if (client.hatGeantwortet() && !hatGeantwortetFlag[i]) {
-                        hatGeantwortetFlag[i] = true;
-                        String antwort = client.getAntwort();
-                        if (antwort != null && antwort.equalsIgnoreCase(frage.richtig)) {
-                            punkteMap.merge(client.getSpielerName(), 1, Integer::sum);
-                            client.sendeNachricht("RICHTIG|Punkte: " + punkteMap.get(client.getSpielerName()));
-                            broadcastNachricht("PUNKTE|" + client.getSpielerName() + ":" + punkteMap.get(client.getSpielerName()));
-                        } else {
-                            client.sendeNachricht("FALSCH|Richtig wäre " + frage.richtig + ".");
-                        }
-                        client.resetAntwort();
-                    }
-                }
-                boolean alleGeantwortet = true;
-                for (boolean antwortFlag : hatGeantwortetFlag) {
-                    if (!antwortFlag) {
+                    if (!hatGeantwortetFlag[i]) {
                         alleGeantwortet = false;
-                        break;
+                        if (client.hatGeantwortet()) {
+                            hatGeantwortetFlag[i] = true;
+                            String antwort = client.getAntwort();
+                            // Überprüfe, ob die Antwort richtig ist
+                            if (antwort != null && antwort.equalsIgnoreCase(frage.richtig)) {
+                                // Vergewissere dich, dass nur der erste Spieler Punkte erhält
+                                if (ersterRichtigerSpieler == null) {
+                                    ersterRichtigerSpieler = client.getSpielerName();
+                                    punkteMap.merge(ersterRichtigerSpieler, 1, Integer::sum);
+                                    client.sendeNachricht("RICHTIG|Du hast als Erster richtig geantwortet! Punkte: " + punkteMap.get(ersterRichtigerSpieler));
+                                    broadcastNachricht("PUNKT|" + ersterRichtigerSpieler + " hat als Erster richtig geantwortet und erhält 1 Punkt!");
+                                } else {
+                                    // Falls dieser Spieler nicht der erste ist
+                                    client.sendeNachricht("RICHTIG|Du hast richtig geantwortet, aber nur der Erste hat Punkte erhalten.");
+                                }
+                            } else {
+                                client.sendeNachricht("FALSCH|Richtig wäre " + frage.richtig + ".");
+                            }
+                            client.resetAntwort();  // Reset für den nächsten Durchlauf
+                        }
                     }
                 }
-                if (alleGeantwortet) break;
+
+                if (alleGeantwortet || ersterRichtigerSpieler != null) break;
 
                 try {
                     LOCK.wait(100);
@@ -191,17 +173,15 @@ public class Server2 {
     private static void zeigeGewinner() {
         Optional<Map.Entry<String, Integer>> gewinnerOpt = punkteMap.entrySet().stream()
                 .max(Map.Entry.comparingByValue());
-
         String gewinner = gewinnerOpt.map(Map.Entry::getKey).orElse("Unentschieden");
         int punkte = punkteMap.getOrDefault(gewinner, 0);
-
         broadcastNachricht("GEWINNER|" + gewinner + " hat mit " + punkte + " Punkten gewonnen!");
     }
 
     private static void resetSpiel() {
         punkteMap.clear();
         beantworteteFragen.clear();
-        bereitgestellteSpieler = 0;  // Reset der Spieleranzahl
+        bereitgestellteSpieler = 0;
         for (ClientHandler client : clients) {
             client.resetAntwort();
         }
@@ -274,7 +254,7 @@ public class Server2 {
                 }
                 clients.remove(this);
                 synchronized (LOCK) {
-                    bereitgestellteSpieler--; // Spieleranzahl dekrementieren, wenn ein Client sich trennt
+                    bereitgestellteSpieler--;
                 }
             }
         }

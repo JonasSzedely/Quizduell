@@ -186,6 +186,12 @@ public class QuizClient3 {
                                 zeigeNachricht(finalNachricht.split("\\|")[1]);
                                 erholePunkte(true); // Punkte erhöhen
                             });
+                        }else if (nachricht.startsWith("ersterRichtigerSpieler")) {
+                            String finalNachricht = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht.split("\\|")[1]);
+                                erholePunkte(true); // Punkte erhöhen
+                            });
                         }
                         else if (nachricht.startsWith("FALSCH|")) {
                             String finalNachricht1 = nachricht;
