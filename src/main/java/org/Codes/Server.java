@@ -258,6 +258,16 @@ public class Server {
         String gewinner = gewinnerOpt.map(Map.Entry::getKey).orElse("Unentschieden");
         int punkte = punkteMap.getOrDefault(gewinner, 0);
         broadcastNachricht("GEWINNER|" + gewinner + " hat mit " + punkte + " Punkten gewonnen!");
+
+        // Warte 5 Sekunden und sende dann NEUES_SPIEL
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                broadcastNachricht("NEUES_SPIEL");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
     /**

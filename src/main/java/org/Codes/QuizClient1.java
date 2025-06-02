@@ -22,7 +22,7 @@ public class QuizClient1 {
     private int punktzahl = 0;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(QuizClient1::new);
+        SwingUtilities.invokeLater(QuizClient2::new);
     }
 
     public QuizClient1() {
@@ -131,7 +131,6 @@ public class QuizClient1 {
                         }
                         else if (nachricht.equals("NÄCHSTE_FRAGE")) {
                             SwingUtilities.invokeLater(() -> {
-                                //frageLabel.setText("Warte auf nächste Frage...");
                                 for (JButton button : antwortButtons) {
                                     button.setEnabled(false);
                                     button.setText(""); // Optional: Antworttexte löschen
@@ -165,6 +164,13 @@ public class QuizClient1 {
                                     button.setEnabled(false);
                                 }
                             });
+                        } else if (nachricht.equals("NEUES_SPIEL")) {
+                            SwingUtilities.invokeLater(() -> {
+                                startButton.setEnabled(true);
+                                frageLabel.setText("Warte auf Spielstart...");
+                                punktzahl = 0;
+                                punkteLabel.setText("Punkte: 0");
+                            });
                         }
                     }
                 } catch (IOException e) {
@@ -195,10 +201,7 @@ public class QuizClient1 {
         Timer timer = new Timer(verzögerungMs, null);
         timer.setRepeats(false);
         timer.addActionListener(e -> {
-            SwingUtilities.invokeLater(() -> {
-                //frageLabel.setText("Nächste Frage wird geladen...");
-                ((Timer)e.getSource()).stop();
-            });
+            SwingUtilities.invokeLater(() -> ((Timer)e.getSource()).stop());
         });
         timer.start();
     }
