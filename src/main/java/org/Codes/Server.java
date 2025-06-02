@@ -158,7 +158,7 @@ public class Server {
 
     /**
      * Wartet auf die Antworten aller Spieler zu einer Frage.
-     * Verarbeitet die erste richtige Antwort für Punkte.
+     * Verarbeitet die erste richtige Antwort für Punkte und steuert den Übergang zur nächsten Frage.
      *
      * @param frage Die aktuelle Frage
      */
@@ -176,17 +176,19 @@ public class Server {
                         if (client.hatGeantwortet()) {
                             hatGeantwortetFlag[i] = true;
                             String antwort = client.getAntwort();
-                            // Überprüfe, ob die Antwort richtig ist
+
                             if (antwort != null && antwort.equalsIgnoreCase(frage.richtig)) {
-                                // Vergewissere dich, dass nur der erste Spieler Punkte erhält
                                 if (ersterRichtigerSpieler == null) {
                                     ersterRichtigerSpieler = client.getSpielerName();
                                     punkteMap.merge(ersterRichtigerSpieler, 1, Integer::sum);
-                                    client.sendeNachricht("RICHTIG|Du hast als Erster richtig geantwortet! Punkte: " + punkteMap.get(ersterRichtigerSpieler));
-                                    broadcastNachricht("PUNKT|" + ersterRichtigerSpieler + " hat als Erster richtig geantwortet und erhält 1 Punkt!");
-                                } else {
-                                    // Falls dieser Spieler nicht der erste ist
-                                    client.sendeNachricht("RICHTIG|Du hast richtig geantwortet, aber nur der Erste hat Punkte erhalten.");
+                                    client.sendeNachricht("RICHTIG|Du hast als Erster richtig geantwortet!");
+
+                                    // Benachrichtige andere Spieler
+                                    for (ClientHandler other : clients) {
+                                        if (!other.getSpielerName().equals(ersterRichtigerSpieler)) {
+                                            other.sendeNachricht("LANGSAM|" + ersterRichtigerSpieler + " hat die Frage Richtig beantwortet.");
+                                        }
+                                    }
                                 }
                             } else {
                                 client.sendeNachricht("FALSCH|Richtig wäre " + frage.richtig + ".");
@@ -195,15 +197,32 @@ public class Server {
                         }
                     }
                 }
-                if (alleGeantwortet || ersterRichtigerSpieler != null)
+
+                // Breche ab, wenn jemand richtig geantwortet hat
+                if (ersterRichtigerSpieler != null) {
                     break;
+                }
+
+                if (alleGeantwortet) {
+                    break;
+                }
+
                 try {
                     LOCK.wait(100);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
+
             beantworteteFragen.add(frage.id);
+
+            // Warte 5 Sekunden bevor nächste Frage kommt
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
             broadcastNachricht("NÄCHSTE_FRAGE");
         }
     }
