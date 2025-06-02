@@ -63,16 +63,17 @@ public class Server {
         Collections.shuffle(fragenListe);
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server läuft auf Port " + PORT);
-            ExecutorService pool = Executors.newFixedThreadPool(MAX_SPIELER);
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                String spielerName = "Spieler " + (clients.size() + 1);
-                ClientHandler client = new ClientHandler(clientSocket, spielerName);
-                clients.add(client);
-                client.sendeNachricht("SPIELERNAME|" + spielerName);
-                pool.execute(client);
-                System.out.println(spielerName + " verbunden!");
-                broadcastStatus();
+            try (ExecutorService pool = Executors.newFixedThreadPool(MAX_SPIELER)) {
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    String spielerName = "Spieler " + (clients.size() + 1);
+                    ClientHandler client = new ClientHandler(clientSocket, spielerName);
+                    clients.add(client);
+                    client.sendeNachricht("SPIELERNAME|" + spielerName);
+                    pool.execute(client);
+                    System.out.println(spielerName + " verbunden!");
+                    broadcastStatus();
+                }
             }
         } catch (IOException e) {
             System.err.println("Serverfehler: " + e.getMessage());
@@ -319,8 +320,8 @@ public class Server {
 
         private final Socket socket;
         private final String spielerName;
-        private PrintWriter ausgang;
-        private BufferedReader eingang;
+        private final PrintWriter ausgang;
+        private final BufferedReader eingang;
         private String aktuelleAntwort;
         private boolean hatGeantwortet;
 
