@@ -7,7 +7,7 @@ import java.net.*;
 
 /**
  * Ein Quiz-Client, der sich mit dem Quiz-Server verbindet und ein GUI für die Spielinteraktion bereitstellt.
- * Das Spiel startet automatisch für alle Clients, sobald ein Client den Start-Button drückt.
+ * Das Spiel startet automatisch für alle Clients, sobald beide Clients den Start-Button gedrückt haben.
  */
 public class QuizClient2 {
     /** Bildschirmauflösung für die GUI-Positionierung */
@@ -15,6 +15,12 @@ public class QuizClient2 {
 
     /** Label für die Anzeige der Frage */
     private JLabel frageLabel;
+
+    /** Label für die Anzeige der Punkte */
+    private JLabel punkteLabel;
+
+    /** Label für den Spielernamen */
+    private JLabel spielerNameLabel;
 
     /** Buttons für die Antwortmöglichkeiten (A, B, C) */
     private JButton[] antwortButtons = new JButton[3];
@@ -28,31 +34,37 @@ public class QuizClient2 {
     /** Socket für die Verbindung zum Server */
     private Socket socket;
 
-    /** Ausgabestream zum Senden von Nachrichten an den Server */
+    /** Ausgabestream zum Senden von Nachrichten an den Server --> output */
     private PrintWriter ausgang;
 
-    /** Eingabestream zum Empfangen von Nachrichten vom Server */
+    /** Eingabestream zum Empfangen von Nachrichten vom Server --> input */
     private BufferedReader eingang;
 
-    /** Portnummer für die Serververbindung */
+    /** Portnummer für die Serververbindung (PortNummer 1404 iranische Kalenderjahr genommen, weil der Port noch nicht belegt --> Gemäss Wikipedia */
     private final int port = 1404;
-
-    /** Status, ob das Quiz gestartet wurde */
-    private boolean quizGestartet = false;
 
     /** Speichert die letzte vom Spieler gegebene Antwort */
     private String letzteAntwort;
 
+    /** Spielername */
+    private String spielerName = "Spieler 1";
+
+    /** Aktuelle Punktzahl des Spielers */
+    private int punktzahl = 0;
+
     /**
-     * Hauptmethode zum Starten des Clients
+     * Hauptmethode zum Starten des Clients.
+     * Diese Methode wird automatisch von der Java-Laufzeitumgebung aufgerufen.
+     *
      * @param args Keine Eingabeparameter erforderlich
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(QuizClient::new);
+        SwingUtilities.invokeLater(QuizClient2::new);
     }
 
     /**
-     * Konstruktor für den QuizClient
+     * Konstruktor für den QuizClient.
+     * Initialisiert die GUI und stellt die Verbindung zum Quiz-Server her.
      */
     public QuizClient2() {
         initialisiereGUI();
@@ -60,13 +72,14 @@ public class QuizClient2 {
     }
 
     /**
-     * Initialisiert die GUI-Komponenten des Clients
+     * Initialisiert die GUI-Komponenten des Clients.
+     * Dazu gehören Fenster, Labels, Buttons und deren Layout.
      */
     private void initialisiereGUI() {
         hauptFenster = new JFrame("QuizDuell - Wer ist der Beste?");
         hauptFenster.setSize(1200, 600);
         hauptFenster.setLocation(
-                (int) (bildschirmAufloesung.getWidth() / 2 - 400),
+                (int) (bildschirmAufloesung.getWidth() / 2 - 600),
                 (int) (bildschirmAufloesung.getHeight() / 2 - 300)
         );
         hauptFenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,6 +89,14 @@ public class QuizClient2 {
         frageLabel = new JLabel("Warte auf Spielstart...", SwingConstants.CENTER);
         frageLabel.setFont(new Font("Arial", Font.BOLD, 24));
         hauptFenster.add(frageLabel, BorderLayout.CENTER);
+
+        // Panel für die Punkte und den Spielernamen
+        JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        punkteLabel = new JLabel("Punkte: " + punktzahl);  // Initialwert der Punkte
+        spielerNameLabel = new JLabel(spielerName); // Spielername zuweisen
+        infoPanel.add(spielerNameLabel);
+        infoPanel.add(punkteLabel);
+        hauptFenster.add(infoPanel, BorderLayout.NORTH); // Hinzufügen des Panels an die obere Kante
 
         // Panel für die Buttons
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
@@ -110,7 +131,9 @@ public class QuizClient2 {
     }
 
     /**
-     * Stellt eine Verbindung zum Quiz-Server her
+     * Stellt eine Verbindung zum Quiz-Server her.
+     * Versucht, sich mit dem Server zu verbinden und initialisiert die Streams für die Kommunikation.
+     * Bei Verbindungsproblemen wird ein Fehlerdialog angezeigt.
      */
     private void verbindeMitServer() {
         try {
@@ -132,6 +155,11 @@ public class QuizClient2 {
                                     frageLabel.setText(status.split("\\|")[1]);
                                     startButton.setEnabled(true);
                                 }
+                            });
+                        } else if (nachricht.startsWith("SPIELERNAME|")) {
+                            spielerName = nachricht.split("\\|")[1]; // Setze den Spielernamen
+                            SwingUtilities.invokeLater(() -> {
+                                spielerNameLabel.setText(spielerName); // Aktualisiere das Label
                             });
                         }
                         else if (nachricht.startsWith("FRAGE|")) {
@@ -159,12 +187,20 @@ public class QuizClient2 {
                             String finalNachricht = nachricht;
                             SwingUtilities.invokeLater(() -> {
                                 zeigeNachricht(finalNachricht.split("\\|")[1]);
+                                erholePunkte(true); // Punkte erhöhen
+                            });
+                        } else if (nachricht.startsWith("ersterRichtigerSpieler")) {
+                            String finalNachricht = nachricht;
+                            SwingUtilities.invokeLater(() -> {
+                                zeigeNachricht(finalNachricht.split("\\|")[1]);
+                                erholePunkte(true); // Punkte erhöhen
                             });
                         }
                         else if (nachricht.startsWith("FALSCH|")) {
                             String finalNachricht1 = nachricht;
                             SwingUtilities.invokeLater(() -> {
                                 zeigeNachricht(finalNachricht1.split("\\|")[1]);
+                                // Keine Punkte verringern, einfach ignorieren
                             });
                         }
                         else if (nachricht.startsWith("GEWINNER|")) {
@@ -189,20 +225,9 @@ public class QuizClient2 {
         }
     }
 
-
     /**
-     * Startet das Quiz auf Client-Seite
-     */
-    private void starteQuiz() {
-        startButton.setEnabled(false);
-        quizGestartet = true;
-        for (JButton button : antwortButtons) {
-            button.setEnabled(true);
-        }
-    }
-
-    /**
-     * Sendet die Antwort des Spielers an den Server
+     * Sendet die Antwort des Spielers an den Server.
+     *
      * @param antwort Die ausgewählte Antwort (A, B oder C)
      */
     private void sendeAntwort(String antwort) {
@@ -210,7 +235,8 @@ public class QuizClient2 {
     }
 
     /**
-     * Zeigt eine Nachricht in einem Dialog an
+     * Zeigt eine Nachricht in einem Dialog an.
+     *
      * @param nachricht Die anzuzeigende Nachricht
      */
     private void zeigeNachricht(String nachricht) {
@@ -218,11 +244,29 @@ public class QuizClient2 {
     }
 
     /**
-     * Zeigt einen Fehlerdialog an
-     * @param titel Der Titel des Dialogs
+     * Zeigt einen Fehlerdialog an.
+     *
+     * @param titel Fehleranzeiger
      * @param nachricht Die Fehlernachricht
      */
     private void zeigeFehler(String titel, String nachricht) {
         JOptionPane.showMessageDialog(hauptFenster, nachricht, titel, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Aktualisiert die Punktzahl des Spielers.
+     * Wenn die Antwort richtig war, erhöht sich die Punktzahl um 1.
+     * Aktualisiert zudem die Anzeige der aktuellen Punktzahl.
+     *
+     * @param richtig Wenn die Antwort richtig war, erhöhen wir die Punkte
+     */
+    private void erholePunkte(boolean richtig) {
+        if (richtig) {
+            punktzahl += 1; // Erhöhung der Punktzahl um 1 für eine richtige Antwort
+        }
+        // Keine Punkte für falsche Antworten! --> ignorieren
+
+        // Aktualisiere das Punkte-Label
+        punkteLabel.setText("Punkte: " + punktzahl);
     }
 }

@@ -1,11 +1,11 @@
-package org.Codes;
+package org.Codes.Alte_Programme;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
 
-public class QuizClientMitPunkte2 {
+public class QuizClientMitPunkte {
     private Dimension bildschirmAufloesung = Toolkit.getDefaultToolkit().getScreenSize();
 
     private JLabel frageLabel;
@@ -20,19 +20,19 @@ public class QuizClientMitPunkte2 {
     private final int port = 1404;
 
     private int punkte = 0;
-    private String spielerName = "Spieler 2";
+    private String spielerName = "Spieler 1";
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(QuizClientMitPunkte2::new);
+        SwingUtilities.invokeLater(QuizClientMitPunkte::new);
     }
 
-    public QuizClientMitPunkte2() {
+    public QuizClientMitPunkte() {
         initialisiereGUI();
         verbindeMitServer();
     }
 
     private void initialisiereGUI() {
-        hauptFenster = new JFrame("QuizDuell - Wer ist der Beste? (Spieler 2)");
+        hauptFenster = new JFrame("QuizDuell - Wer ist der Beste?");
         hauptFenster.setSize(1200, 600);
         hauptFenster.setLocation(
                 (int) (bildschirmAufloesung.getWidth() / 2 - 600),

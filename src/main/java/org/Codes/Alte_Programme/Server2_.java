@@ -1,8 +1,7 @@
-package org.Codes;
+package org.Codes.Alte_Programme;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,47 +16,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Ein Quiz-Server, der Fragen aus einer JSON-Datei lädt und mit mehreren Clients interagiert.(minimum 2 Client)
+ * Ein Quiz-Server, der Fragen aus einer JSON-Datei lädt und mit mehreren Clients interagiert.
  * Die Clients erhalten synchronisierte Fragen und können gegeneinander antreten.
  */
-public class Server {
-
-    /** Liste der geladenen Fragen */
+public class Server2_ {
     private static List<Frage> fragenListe = new ArrayList<>();
-
-    /** Liste der verbundenen Clients */
     private static final List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
-
-    /** Map zur Punktezählung der Spieler */
     private static final Map<String, Integer> punkteMap = new ConcurrentHashMap<>();
-
-    /** Setzts der bereits beantworteten Fragen (ID) */
     private static final Set<Integer> beantworteteFragen = Collections.synchronizedSet(new HashSet<>());
-
-    /** Server-Port, 1404 laut Wikipedia nicht besetzt (Iranische Kalender) */
     private static final int PORT = 1404;
-
-    /** Maximale Anzahl der Spieler */
     private static final int MAX_SPIELER = 2;
-
-    /** Lock-Objekt für Synchronisation */
     private static final Object LOCK = new Object();
-
-    /** Pfad zur JSON-Datei mit Fragen */
     private static final String JSON_PFAD = "src/Ordner_Fragen/fragen.json";
-
-    /** Flag, ob auf den Start des Spiels gewartet wird */
     private static boolean wartetAufStart = true;
-
-    /** Anzahl der bereitgestellten Spieler */
     private static int bereitgestellteSpieler = 0;
 
-    /**
-     * Main-Methode zum Starten des Servers.
-     * Lädt Fragen, startet den ServerSocket und akzeptiert Client-Verbindungen.
-     *
-     * @param args Kommandozeilenargumente (nicht verwendet)
-     */
     public static void main(String[] args) {
         ladeFragenAusJson(JSON_PFAD);
         Collections.shuffle(fragenListe);
@@ -79,11 +52,6 @@ public class Server {
         }
     }
 
-    /**
-     * Lädt die Fragen aus einer JSON-Datei.
-     *
-     * @param dateiPfad Pfad zur JSON-Datei
-     */
     private static void ladeFragenAusJson(String dateiPfad) {
         try {
             String json = new String(Files.readAllBytes(Paths.get(dateiPfad)));
@@ -100,10 +68,6 @@ public class Server {
         }
     }
 
-    /**
-     * Sendet den aktuellen Status an alle verbundenen Clients.
-     * Zeigt an, ob gewartet wird, ob das Spiel bereit ist oder läuft.
-     */
     private static void broadcastStatus() {
         String status;
         if (clients.size() < MAX_SPIELER) {
@@ -116,10 +80,6 @@ public class Server {
         broadcastNachricht("STATUS|" + status);
     }
 
-    /**
-     * Startet das Spiel, sobald alle Spieler bereit sind.
-     * Sendet die Fragen an alle und steuert den Spielablauf.
-     */
     private static void starteSpiel() {
         System.out.println("Spiel startet mit " + clients.size() + " Spielern!");
         broadcastNachricht("SPIEL_STARTET");
@@ -127,8 +87,7 @@ public class Server {
 
         new Thread(() -> {
             for (Frage frage : fragenListe) {
-                if (beantworteteFragen.contains(frage.id))
-                    continue;
+                if (beantworteteFragen.contains(frage.id)) continue;
                 sendeFrageAnAlle(frage);
                 warteAufAntworten(frage);
                 if (hatGewinner()) {
@@ -143,11 +102,6 @@ public class Server {
         }).start();
     }
 
-    /**
-     * Sendet eine Frage an alle verbundenen Clients.
-     *
-     * @param frage Die Frage, die gesendet wird
-     */
     private static void sendeFrageAnAlle(Frage frage) {
         synchronized (LOCK) {
             for (ClientHandler client : clients) {
@@ -156,12 +110,6 @@ public class Server {
         }
     }
 
-    /**
-     * Wartet auf die Antworten aller Spieler zu einer Frage.
-     * Verarbeitet die erste richtige Antwort für Punkte.
-     *
-     * @param frage Die aktuelle Frage
-     */
     private static void warteAufAntworten(Frage frage) {
         boolean[] hatGeantwortetFlag = new boolean[clients.size()];
         String ersterRichtigerSpieler = null;
@@ -169,6 +117,7 @@ public class Server {
         synchronized (LOCK) {
             while (true) {
                 boolean alleGeantwortet = true;
+
                 for (int i = 0; i < clients.size(); i++) {
                     ClientHandler client = clients.get(i);
                     if (!hatGeantwortetFlag[i]) {
@@ -191,12 +140,13 @@ public class Server {
                             } else {
                                 client.sendeNachricht("FALSCH|Richtig wäre " + frage.richtig + ".");
                             }
-                            client.resetAntwort();
+                            client.resetAntwort();  // Reset für den nächsten Durchlauf
                         }
                     }
                 }
-                if (alleGeantwortet || ersterRichtigerSpieler != null)
-                    break;
+
+                if (alleGeantwortet || ersterRichtigerSpieler != null) break;
+
                 try {
                     LOCK.wait(100);
                 } catch (InterruptedException e) {
@@ -208,20 +158,10 @@ public class Server {
         }
     }
 
-    /**
-     * Überprüft, ob es einen Gewinner gibt (Spieler mit mindestens 5 Punkten).
-     *
-     * @return true, wenn ein Gewinner vorhanden ist, sonst false
-     */
     private static boolean hatGewinner() {
         return punkteMap.values().stream().anyMatch(punkte -> punkte >= 5);
     }
 
-    /**
-     * Sendet eine Nachricht an alle verbundenen Clients.
-     *
-     * @param nachricht Die Nachricht, die gesendet wird
-     */
     private static void broadcastNachricht(String nachricht) {
         synchronized (clients) {
             for (ClientHandler client : clients) {
@@ -230,9 +170,6 @@ public class Server {
         }
     }
 
-    /**
-     * Zeigt den Gewinner des Spiels an, basierend auf den Punkten.
-     */
     private static void zeigeGewinner() {
         Optional<Map.Entry<String, Integer>> gewinnerOpt = punkteMap.entrySet().stream()
                 .max(Map.Entry.comparingByValue());
@@ -241,9 +178,6 @@ public class Server {
         broadcastNachricht("GEWINNER|" + gewinner + " hat mit " + punkte + " Punkten gewonnen!");
     }
 
-    /**
-     * Setzt das Spiel zurück, um eine neue Runde zu starten.
-     */
     private static void resetSpiel() {
         punkteMap.clear();
         beantworteteFragen.clear();
@@ -254,17 +188,10 @@ public class Server {
     }
 
     // --- Datenklassen für JSON-Parsing ---
-
-    /**
-     * Containerklasse für die JSON-Struktur der Fragen.
-     */
     public static class FragenContainer {
         public List<Frage> fragen;
     }
 
-    /**
-     * Klasse zur Darstellung einer Frage.
-     */
     public static class Frage {
         public int id;
         public String frage;
@@ -272,9 +199,6 @@ public class Server {
         public String richtig;
     }
 
-    /**
-     * Klasse zur Darstellung der Antwortmöglichkeiten.
-     */
     public static class Antworten {
         public String A;
         public String B;
@@ -282,26 +206,14 @@ public class Server {
     }
 
     // --- Client-Handler-Klasse ---
-
-    /**
-     * Handler für einen einzelnen Client.
-     */
     public static class ClientHandler implements Runnable {
-
         private final Socket socket;
         private final String spielerName;
         private PrintWriter ausgang;
         private BufferedReader eingang;
         private String aktuelleAntwort;
-        private boolean hatGeantwortet;
+        private boolean hatGeantwortet = false;
 
-        /**
-         * Konstruktor für den Client-Handler.
-         *
-         * @param socket Die Socket-Verbindung zum Client
-         * @param spielerName Der Name des Spielers
-         * @throws IOException Bei IO-Fehlern
-         */
         public ClientHandler(Socket socket, String spielerName) throws IOException {
             this.socket = socket;
             this.spielerName = spielerName;
@@ -309,12 +221,8 @@ public class Server {
             this.eingang = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.aktuelleAntwort = null;
             punkteMap.put(spielerName, 0);
-            this.hatGeantwortet = false;
         }
 
-        /**
-         * Laufmethode des Threads, liest Nachrichten vom Client.
-         */
         @Override
         public void run() {
             try {
@@ -351,11 +259,6 @@ public class Server {
             }
         }
 
-        /**
-         * Sendet eine Frage an den Client.
-         *
-         * @param frage Die Frage, die gesendet wird
-         */
         public void sendeFrage(Frage frage) {
             ausgang.println("FRAGE|" + frage.frage);
             ausgang.println("A: " + frage.antworten.A);
@@ -364,49 +267,26 @@ public class Server {
             hatGeantwortet = false;
         }
 
-        /**
-         * Sendet eine Nachricht an den Client.
-         *
-         * @param nachricht Die Nachricht
-         */
         public void sendeNachricht(String nachricht) {
             ausgang.println(nachricht);
         }
 
-        /**
-         * Gibt den Spielernamen zurück.
-         *
-         * @return Der Spielername
-         */
         public String getSpielerName() {
             return spielerName;
         }
 
-        /**
-         * Gibt die letzte Antwort des Clients zurück.
-         *
-         * @return Die letzte Antwort des Clients
-         */
         public String getAntwort() {
             return aktuelleAntwort;
         }
 
-        /**
-         * Gibt zurück, ob der Client geantwortet hat.
-         *
-         * @return true, wenn geantwortet wurde, sonst false
-         */
         public boolean hatGeantwortet() {
             return hatGeantwortet;
         }
 
-        /**
-         * Setzt die Antwort des Clients zurück.
-         */
         public void resetAntwort() {
             aktuelleAntwort = null;
             hatGeantwortet = false;
         }
     }
-
 }
+
