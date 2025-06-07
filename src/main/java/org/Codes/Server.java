@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
  * Ein Quiz-Server, der Fragen aus einer JSON-Datei lädt und mit mehreren Clients interagiert.(minimum 2 Client)
  * Die Clients erhalten synchronisierte Fragen und können gegeneinander antreten.
  */
+
 public class Server {
 
     /** Liste der geladenen Fragen */
@@ -77,6 +78,7 @@ public class Server {
             }
         } catch (IOException e) {
             System.err.println("Serverfehler: " + e.getMessage());
+            errorHandler("Serverfehler: " + e.getMessage());
         }
     }
 
@@ -281,6 +283,10 @@ public class Server {
         for (ClientHandler client : clients) {
             client.resetAntwort();
         }
+    }
+
+    private static void errorHandler(String fehler) {
+        broadcastNachricht("ERROR|" + fehler);
     }
 
     // --- Datenklassen für JSON-Parsing ---

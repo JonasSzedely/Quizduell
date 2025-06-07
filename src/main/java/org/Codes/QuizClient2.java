@@ -6,20 +6,20 @@ import java.io.*;
 import java.net.*;
 
 /**
- * Der QuizClient1 ist die Client-Seite eines Quizspiels, das mit einem Server kommuniziert.
+ * Der QuizClient ist die Client-Seite eines Quizspiels, das mit einem Server kommuniziert.
  * Das GUI zeigt Fragen, Antwortmöglichkeiten und den Punktestand an.
  * Es empfängt Nachrichten vom Server und reagiert entsprechend.
  */
 public class QuizClient2 {
 
     // Bildschirmauflösung zur Zentrierung des Fensters
-    private Dimension bildschirmAufloesung = Toolkit.getDefaultToolkit().getScreenSize();
+    private final Dimension bildschirmAufloesung = Toolkit.getDefaultToolkit().getScreenSize();
 
     // GUI-Komponenten
     private JLabel frageLabel;
     private JLabel punkteLabel;
     private JLabel spielerNameLabel;
-    private JButton[] antwortButtons = new JButton[3];
+    private final JButton[] antwortButtons = new JButton[3];
     private JButton startButton;
     private JFrame hauptFenster;
 
@@ -89,7 +89,7 @@ public class QuizClient2 {
 
             final char antwort = (char) ('A' + i);
             // ActionListener für Antwort-Buttons
-            antwortButtons[i].addActionListener(e -> {
+            antwortButtons[i].addActionListener(_ -> {
                 letzteAntwort = String.valueOf(antwort);
                 sendeAntwort(letzteAntwort);
                 // Buttons nach Auswahl deaktivieren
@@ -104,7 +104,7 @@ public class QuizClient2 {
         // Start-Button
         startButton = new JButton("Quiz starten");
         startButton.setFont(new Font("Arial", Font.BOLD, 18));
-        startButton.addActionListener(e -> {
+        startButton.addActionListener(_ -> {
             ausgang.println("START");
             startButton.setEnabled(false);
         });
@@ -179,20 +179,20 @@ public class QuizClient2 {
                             // Richtig geantwortet
                             String finalNachricht = nachricht.split("\\|")[1];
                             SwingUtilities.invokeLater(() -> {
-                                zeigeTemporäreNachricht(finalNachricht, 5000);
+                                zeigeTemporaereNachricht(finalNachricht, 5000);
                                 erholePunkte(true);
                             });
                         } else if (nachricht.startsWith("LANGSAM|")) {
                             // Zeit abgelaufen
                             String finalNachricht = nachricht.split("\\|")[1];
                             SwingUtilities.invokeLater(() -> {
-                                zeigeTemporäreNachricht(finalNachricht, 5000);
+                                zeigeTemporaereNachricht(finalNachricht, 5000);
                             });
                         } else if (nachricht.startsWith("FALSCH|")) {
                             // Falsche Antwort
                             String finalNachricht = nachricht.split("\\|")[1];
                             SwingUtilities.invokeLater(() -> {
-                                zeigeTemporäreNachricht("Falsch! " + finalNachricht, 5000);
+                                zeigeTemporaereNachricht("Falsch! " + finalNachricht, 5000);
                             });
                         } else if (nachricht.startsWith("GEWINNER|")) {
                             // Gewinner bekanntgegeben
@@ -237,9 +237,9 @@ public class QuizClient2 {
      * Zeigt eine temporäre Nachricht im Fragen-Label an.
      * Nach der Verzögerung wird wieder die ursprüngliche Frage angezeigt.
      * @param nachricht Die Nachricht, die angezeigt werden soll.
-     * @param verzögerungMs Dauer in Millisekunden, die die Nachricht angezeigt wird.
+     * @param verzoegerungMs Dauer in Millisekunden, die die Nachricht angezeigt wird.
      */
-    private void zeigeTemporäreNachricht(String nachricht, int verzögerungMs) {
+    private void zeigeTemporaereNachricht(String nachricht, int verzoegerungMs) {
         SwingUtilities.invokeLater(() -> {
             frageLabel.setText(nachricht);
             for (JButton button : antwortButtons) {
@@ -247,7 +247,7 @@ public class QuizClient2 {
                 button.setText("");
             }
         });
-        Timer timer = new Timer(verzögerungMs, e -> {
+        Timer timer = new Timer(verzoegerungMs, e -> {
             SwingUtilities.invokeLater(() -> ((Timer)e.getSource()).stop());
         });
         timer.setRepeats(false);
@@ -281,4 +281,5 @@ public class QuizClient2 {
         }
         punkteLabel.setText("Punkte: " + punktzahl);
     }
+
 }
